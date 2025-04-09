@@ -1,0 +1,16 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+html{
+    padding: 0;
+    margin: 0;
+}
+.corpo {
+    display: flex;
+    position: fixed;
+    background-color: #F6FCFF;
+    min-width: 100vw;
+    min-height: 100vh;
+}
