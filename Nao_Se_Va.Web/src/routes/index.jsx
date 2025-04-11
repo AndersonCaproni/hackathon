@@ -19,7 +19,13 @@ export const route = createBrowserRouter([
             },
             {
                 path: "/dash",
-                element: <MainDash />
+                element: <MainDash />,
+                children: [
+                    {
+                        path: "/dash/alunos",
+                        element: <>oi</>,
+                    },
+                ],
             },
         ]
     }

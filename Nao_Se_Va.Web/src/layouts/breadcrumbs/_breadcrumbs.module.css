@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'PoppinsSemiBold';
+    src: url('../../assets/fonts/Poppins/Poppins-SemiBold.ttf');
+}
+
+.titulo {
+    font-family: 'PoppinsSemiBold', sans-serif !important;
+}
+
+.rota {
+    font-family: 'PoppinsSemiBold', sans-serif !important;
+}

@@ -1,9 +1,11 @@
 import styles from './_mainDash.module.css'
 import { TopBar } from '../../layouts/topBar'
+import { SideBar } from '../../layouts/sidebar'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Box, Fade, IconButton, Paper, Popper, Typography } from '@mui/material'
 import { LoginTwoTone, PermIdentityOutlined, SettingsTwoTone } from "@mui/icons-material";
 import { useEffect, useRef, useState } from 'react';
+import Breadcrumbs from '../../layouts/breadcrumbs';
 export const MainDash = () => {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -11,6 +13,43 @@ export const MainDash = () => {
     const [placement, setPlacement] = useState();
     const buttonRef = useRef(null);
     const popperRef = useRef(null);
+    const navigation = {
+        items: [
+            {
+                id: "dashboard",
+                title: "Dashboard",
+                type: "collapse",
+                url: "/dash",
+                tamanho: "1.2rem",
+                //icon: icons.IconFilePencil,
+                target: false,
+                children: [
+                    {
+                        id: "alunos",
+                        title: "Alunos",
+                        type: "item",
+                        //icon: icons.IconHomeEdit,
+                        tamanho: "1rem",
+                        url: "/dash/alunos",
+                        target: false,
+                        //children: [
+                        //    {
+                        //        title: "Bloquear Cartão",
+                        //        icon: icons.IconIdOff,
+                        //        url: "/condominios/:id/bloquear_cartao",
+                        //    }
+                        //],
+                    },
+                    {
+                        title: "Perfil",
+                        url: "/perfil",
+                        //icon: icons.IconUser,
+                        type: "label",
+                    },
+                ],
+            }
+        ]
+    };
 
     const handleClick = (newPlacement) => (event) => {
         setAnchorEl(event.currentTarget);
@@ -37,50 +76,43 @@ export const MainDash = () => {
 
     return (
         <div className={styles.corpo}>
-            <TopBar
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "end",
-                    padding: "0 20px",
-                    boxShadow: "0 0 10px rgba(0,0,0)"
-                }}
-            >
+            <TopBar>
                 <Box
                     ref={buttonRef}
                     onClick={handleClick('bottom-end')}
                     sx={{
-                        width: "5.5rem",
-                        height: "3rem",
+                        width: "5.6rem",
+                        height: "3.1rem",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-around",
-                        backgroundColor: "white",
+                        backgroundColor: "#257ae9",
+                        border: "solid 2px #257ae9",
                         borderRadius: "40px",
                         cursor: "pointer",
                         transition: "all 0.3s",
                         "&:hover .icon1": {
-                            color: "#ffffff"
+                            color: "#257ae9"
                         },
                         "&:hover .icon2": {
-                            color: "#91b9ce"
+                            color: "#ffffff"
                         },
                         "&:hover .icon-button": {
-                            backgroundColor: "#ffffff"
+                            backgroundColor: "#257ae9"
                         },
                         "&:hover": {
-                            backgroundColor: "#91b9ce",
+                            backgroundColor: "#ffffff",
                         }
                     }}>
-                    <SettingsTwoTone className="icon1" fontSize="inherit" sx={{ fontSize: "1.7rem", color: "#91b9ce" }} />
+                    <SettingsTwoTone className="icon1" fontSize="inherit" sx={{ fontSize: "1.7rem", color: "#ffffff" }} />
                     <IconButton sx={{
-                        backgroundColor: "#91b9ce",
+                        backgroundColor: "#ffffff",
                         p: 0,
                         width: "2.3rem",
                         height: "2.3rem",
                     }}
                         className="icon-button">
-                        <PermIdentityOutlined className="icon2" fontSize="inherit" sx={{ fontSize: "1.7rem", color: "#ffffff" }} />
+                        <PermIdentityOutlined className="icon2" fontSize="inherit" sx={{ fontSize: "1.7rem", color: "#257ae9" }} />
                     </IconButton>
                 </Box>
                 <Popper
@@ -101,30 +133,50 @@ export const MainDash = () => {
                                 boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 1
+                                gap: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}>
+                                <Typography sx={{ borderBottom: "solid rgb(211, 211, 211) 1px" }}>
+                                    João Vitor Pereira de Souza
+                                </Typography>
                                 <Box sx={{
                                     display: "flex",
-                                    alignItems: "baseline",
+                                    alignItems: "center",
                                     flexDirection: "row",
-                                    gap: 1,
+                                    gap: 3,
+                                    width: "100%",
+                                    cursor: "pointer",
                                     p: 2,
                                     "&:hover": {
                                         backgroundColor: "#f0f0f0",
                                         borderRadius: "10px"
                                     }
                                 }}>
-                                    <Typography variant='h6'>
-                                        Nome:
-                                    </Typography>
-                                    <Typography>
-                                        João Vitor Pereira de Souza
+                                    <PermIdentityOutlined />
+                                    <Typography variant='h7'>
+                                        Perfil
                                     </Typography>
                                 </Box>
-                                <Box sx={{ width: "100%", display: "flex", alignItems: "center", padding: "0 10px" }}>
-                                    <IconButton onClick={() => navigate("/")}>
-                                        <LoginTwoTone />
-                                    </IconButton>
+                                <Box sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "row",
+                                    gap: 3,
+                                    cursor: "pointer",
+                                    p: 2,
+                                    width: "100%",
+                                    "&:hover": {
+                                        backgroundColor: "#f0f0f0",
+                                        borderRadius: "10px"
+                                    }
+                                }}
+                                    onClick={() => navigate("/")}
+                                >
+                                    <LoginTwoTone />
+                                    <Typography variant='h7'>
+                                        Sair
+                                    </Typography>
                                 </Box>
                             </Paper>
                         </Fade>
@@ -132,7 +184,16 @@ export const MainDash = () => {
                 </Popper>
 
             </TopBar>
+            <SideBar>
+            <Breadcrumbs
+                navigation={navigation}
+                icons
+                title
+                rightAlign
+            />
+            teste conteudo
             <Outlet />
+            </SideBar>
         </div>
     )
 }

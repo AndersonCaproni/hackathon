@@ -1,16 +1,23 @@
 body{
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Poppins' !important;
 }
 
 html{
-    padding: 0;
-    margin: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: 'Poppins' !important;
 }
 .corpo {
-    display: flex;
-    position: fixed;
-    background-color: #F6FCFF;
-    min-width: 100vw;
-    min-height: 100vh;
+    display: flex !important;
+    position: fixed !important;
+    background-color: #e9eef1 !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
 }
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../../assets/fonts/Poppins/Poppins-Regular.ttf') ;
+  }
