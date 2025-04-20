@@ -2,7 +2,7 @@ import { useContext, useState, createContext, useEffect, useRef, } from 'react';
 import { TopBar } from '../layouts/topBar'
 import { SideBar } from '../layouts/sidebar'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Box, Button, Fade, IconButton, Paper, Popper, Typography, LinearProgress, Collapse  } from '@mui/material'
+import { Box, Button, Fade, IconButton, Paper, Popper, Typography, LinearProgress, Collapse, Tooltip } from '@mui/material'
 import {
     LoginTwoTone,
     PermIdentityOutlined,
@@ -13,12 +13,12 @@ import {
     KeyboardArrowDown,
     AutoAwesome,
     KeyboardArrowUp,
-    Message, 
-    MenuBook
+    Message,
+    MenuBook,
 } from "@mui/icons-material";
 import Breadcrumbs from '../layouts/breadcrumbs';
 import Loading from '../components/Loading';
-import {LlamaChat} from '../services/ia';
+import { LlamaChat } from '../services/ia';
 
 const InfosContext = createContext();
 
@@ -95,9 +95,10 @@ export const InfosProvider = ({ children }) => {
                         target: false,
                     },
                     {
+                        id: "perfil",
                         title: "Perfil",
-                        url: "/perfil",
-                        //icon: icons.IconUser,
+                        url: "/dash/perfil",
+                        icon: PermIdentityOutlined,
                         type: "label",
                     },
                 ],
@@ -144,7 +145,7 @@ export const InfosProvider = ({ children }) => {
             id: 3,
             nome: 'Beatriz Santos Oliveira',
             email: 'bia.santos@gmail.com',
-            curso: 'Design Digital',
+            curso: 'Engenharia de Software',
             periodo: 5,
             possibilidadeDeEvasao: 45,
             ultimoAcesso: '2025-02-22',
@@ -179,7 +180,7 @@ export const InfosProvider = ({ children }) => {
             id: 1,
             nome: 'Ana Maria de Souza Praga',
             email: 'anamaria@gmail.com',
-            curso: 'Ciências da Computação',
+            curso: 'Análise e Desenvolvimento de Sistemas',
             periodo: 1,
             possibilidadeDeEvasao: 30,
             ultimoAcesso: '2025-03-01',
@@ -249,7 +250,7 @@ export const InfosProvider = ({ children }) => {
             id: 5,
             nome: 'Carla Menezes Tavares',
             email: 'carla.tavares@gmail.com',
-            curso: 'Administração',
+            curso: 'Engenharia de Software',
             periodo: 6,
             possibilidadeDeEvasao: 65,
             ultimoAcesso: '2025-04-12',
@@ -284,7 +285,7 @@ export const InfosProvider = ({ children }) => {
             id: 6,
             nome: 'Diego Ramos Nascimento',
             email: 'diego.nascimento@gmail.com',
-            curso: 'Sistemas de Informação',
+            curso: 'Engenharia de Software',
             periodo: 8,
             possibilidadeDeEvasao: 0,
             ultimoAcesso: '2025-04-01',
@@ -319,7 +320,7 @@ export const InfosProvider = ({ children }) => {
             id: 7,
             nome: 'Fernanda Alves Corrêa',
             email: 'fernanda.correa@gmail.com',
-            curso: 'Pedagogia',
+            curso: 'Análise e Desenvolvimento de Sistemas',
             periodo: 4,
             possibilidadeDeEvasao: 35,
             ultimoAcesso: '2025-04-18',
@@ -354,7 +355,7 @@ export const InfosProvider = ({ children }) => {
             id: 8,
             nome: 'Lucas Henrique Martins',
             email: 'lucas.h.martins@hotmail.com',
-            curso: 'Engenharia Civil',
+            curso: 'Engenharia de Software',
             periodo: 2,
             possibilidadeDeEvasao: 82,
             ultimoAcesso: '2025-03-10',
@@ -389,7 +390,7 @@ export const InfosProvider = ({ children }) => {
             id: 9,
             nome: 'Juliana Souza Lima',
             email: 'juliana.lima@aluno.edu.br',
-            curso: 'Direito',
+            curso: 'Engenharia de Software',
             periodo: 6,
             possibilidadeDeEvasao: 5,
             ultimoAcesso: '2025-04-15',
@@ -424,7 +425,7 @@ export const InfosProvider = ({ children }) => {
             id: 10,
             nome: 'Rafael Oliveira Mendes',
             email: 'rafael.mendes@yahoo.com',
-            curso: 'Administração',
+            curso: 'Análise e Desenvolvimento de Sistemas',
             periodo: 3,
             possibilidadeDeEvasao: 48,
             ultimoAcesso: '2025-03-05',
@@ -459,7 +460,7 @@ export const InfosProvider = ({ children }) => {
             id: 11,
             nome: 'Mariana Castro Silva',
             email: 'mariana.silva@gmail.com',
-            curso: 'Ciência da Computação',
+            curso: 'Análise e Desenvolvimento de Sistemas',
             periodo: 5,
             possibilidadeDeEvasao: 22,
             ultimoAcesso: '2025-04-13',
@@ -515,6 +516,28 @@ export const InfosProvider = ({ children }) => {
         };
     }, []);
 
+    const [coordenador, setCoordenador] = useState({
+        id: 1,
+        nome: "Anderson Silva",
+        email: "anderson.silva@universidade.edu",
+        telefone: "(11) 98765-4321",
+        titulacao: "Mestre em Engenharia de Software",
+        departamentos: ["Engenharia da Computação", "Sistemas de Informação"],
+        cursosCoordenados: [
+            {
+                id: 101,
+                nome: "Engenharia de Software",
+                cargaHoraria: 3600,
+                modalidade: "Presencial"
+            },
+            {
+                id: 102,
+                nome: "Análise e Desenvolvimento de Sistemas",
+                cargaHoraria: 2800,
+                modalidade: "EAD"
+            }
+        ]
+    });
 
     const toggleDrawer = () => {
         setOpenSide(!openSide);
@@ -522,6 +545,7 @@ export const InfosProvider = ({ children }) => {
 
     return (
         <InfosContext.Provider value={{
+            Tooltip,
             Collapse,
             KeyboardArrowDown,
             KeyboardArrowUp,
@@ -538,7 +562,9 @@ export const InfosProvider = ({ children }) => {
             setOpenSide,
             toggleDrawer,
             TopBar,
-            listaMensagem, 
+            coordenador,
+            setCoordenador,
+            listaMensagem,
             setListaMensagem,
             SideBar,
             Outlet,
@@ -564,10 +590,11 @@ export const InfosProvider = ({ children }) => {
             popperRef,
             navigation,
             handleClick,
-            loadingResposta, 
+            loadingResposta,
             setLoadingResposta,
             Button,
-            setAlunos
+            setAlunos,
+            AutoAwesome
         }}>
             {children}
         </InfosContext.Provider>

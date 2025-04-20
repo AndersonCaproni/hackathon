@@ -1,3 +1,4 @@
+import { Padding } from '@mui/icons-material';
 import { useInfos } from '../../hooks/InfosProvider';
 import styles from './_mainDash.module.css';
 
@@ -73,7 +74,10 @@ export const MainDash = () => {
                 </Box>
                 <Popper
                     ref={popperRef}
-                    sx={{ zIndex: 1200 }}
+                    sx={{ 
+                        zIndex: 1200,
+                        minWidth: '350px'
+                    }}
                     open={open}
                     anchorEl={anchorEl}
                     placement={placement}
@@ -82,10 +86,11 @@ export const MainDash = () => {
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
                             <Paper sx={{
-                                marginTop: 2,
+                                marginTop: 0.5,
                                 p: 3,
                                 borderRadius: "20px",
-                                width: "auto", border: "none",
+                                width: "auto", 
+                                border: "none",
                                 boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                                 display: "flex",
                                 flexDirection: "column",
@@ -93,7 +98,7 @@ export const MainDash = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
-                                <Typography sx={{ borderBottom: "solid rgb(211, 211, 211) 1px" }}>
+                                <Typography sx={{ cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px" , width: '100%', textAlign: 'center', padding: 2 }}>
                                     João Vitor Pereira de Souza
                                 </Typography>
                                 <Box sx={{
@@ -106,9 +111,11 @@ export const MainDash = () => {
                                     p: 2,
                                     "&:hover": {
                                         backgroundColor: "#f0f0f0",
-                                        borderRadius: "10px"
+                                        borderRadius: "10px",
+                                        color: '#257ae9'
                                     }
-                                }}>
+                                }}
+                                onClick={() => navigate('perfil')}>
                                     <PermIdentityOutlined />
                                     <Typography variant='h7'>
                                         Perfil
@@ -124,7 +131,8 @@ export const MainDash = () => {
                                     width: "100%",
                                     "&:hover": {
                                         backgroundColor: "#f0f0f0",
-                                        borderRadius: "10px"
+                                        borderRadius: "10px",
+                                        color: '#257ae9'
                                     }
                                 }}
                                     onClick={() => navigate("/")}

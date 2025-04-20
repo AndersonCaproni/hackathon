@@ -9,6 +9,8 @@ import { DetalheAluno } from "../views/mainDash/alunos/detail";
 import Chat from "../views/mainDash/chat/chat";
 import Curso from "../views/mainDash/curso";
 import Mensagem from "../views/mainDash/mensagem";
+import Perfil from "../views/mainDash/perfil";
+import Dash from "../views/mainDash/dash";
 
 export const route = createBrowserRouter([
     {
@@ -30,6 +32,10 @@ export const route = createBrowserRouter([
                         <MainDash />
                     </InfosProvider>,
                 children: [
+                    {
+                        path: "/dash",
+                        element: <Dash/>
+                    },
                     {
                         path: "/dash/alunos",
                         children:[
@@ -55,7 +61,10 @@ export const route = createBrowserRouter([
                         path: "/dash/ia",
                         element: <Chat/>
                     },
-                    
+                    {
+                        path: "/dash/perfil",
+                        element: <Perfil/>
+                    },
                 ],
             },
         ]

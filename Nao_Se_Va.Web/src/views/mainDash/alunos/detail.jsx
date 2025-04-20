@@ -621,7 +621,7 @@ export const DetalheAluno = () => {
                 flexDirection: "column",
                 width: "40%",
                 minHeight: '500px',
-                height: "auto",
+                height: loadingOpen ? "500px" : "auto",
                 border: "solid 1px rgb(211, 211, 211)",
                 borderRadius: "10px",
                 overflow: "hidden",
@@ -636,7 +636,7 @@ export const DetalheAluno = () => {
                         alignItems: "center",
                         width: "100%",
                         height: "100%",
-                        backgroundColor: "rgba(255, 255, 255, 0.8)",
+                        backgroundColor: "rgb(255, 255, 255)",
                         zIndex: 9999,
                     }}
                     loading={loadingOpen}

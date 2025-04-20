@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styles from './_login.module.css';
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import { Formik } from "formik";
 import toast from "react-hot-toast";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../../assets/logoAzulIcon.png'
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +30,7 @@ export const Login = () => {
                     backgroundColor: " #00C851",
                     color: `white`,
                     borderRadius: "8px",
-                  },
+                },
                 className: "",
 
                 // Custom Icon
@@ -113,6 +114,13 @@ export const Login = () => {
                             noValidate
                             onSubmit={(e) => onSubmit(e, values)}
                         >
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 3 }}>
+                                <img src={Logo} alt='logo' className={styles.logo} />
+                                <Typography sx={{ fontFamily: 'Poppins', color: '#585757', width: '90%', textAlign: 'center' }} variant='h5'>
+                                    Olá, seja bem vindo ao nosso Portal!
+                                </Typography>
+                            </Box>
+
                             <FormControl
                                 fullWidth
                                 error={Boolean(touched.email && errors.email)}
@@ -196,7 +204,12 @@ export const Login = () => {
                                     size="large"
                                     variant="contained"
                                     type="submit"
-                                    sx={{backgroundColor:"#11445E"}}
+                                    sx={{
+                                        backgroundColor: "#257ae9",
+                                        '&:hover': {
+                                            backgroundColor:'#226ac9'
+                                        }
+                                    }}
                                 >
                                     Login
                                 </Button>
