@@ -1,78 +1,34 @@
-import styles from './_mainDash.module.css'
-import { TopBar } from '../../layouts/topBar'
-import { SideBar } from '../../layouts/sidebar'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { Box, Fade, IconButton, Paper, Popper, Typography } from '@mui/material'
-import { LoginTwoTone, PermIdentityOutlined, SettingsTwoTone } from "@mui/icons-material";
-import { useEffect, useRef, useState } from 'react';
-import Breadcrumbs from '../../layouts/breadcrumbs';
+import { useInfos } from '../../hooks/InfosProvider';
+import styles from './_mainDash.module.css';
+
+
 export const MainDash = () => {
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [placement, setPlacement] = useState();
-    const buttonRef = useRef(null);
-    const popperRef = useRef(null);
-    const navigation = {
-        items: [
-            {
-                id: "dashboard",
-                title: "Dashboard",
-                type: "collapse",
-                url: "/dash",
-                tamanho: "1.2rem",
-                //icon: icons.IconFilePencil,
-                target: false,
-                children: [
-                    {
-                        id: "alunos",
-                        title: "Alunos",
-                        type: "item",
-                        //icon: icons.IconHomeEdit,
-                        tamanho: "1rem",
-                        url: "/dash/alunos",
-                        target: false,
-                        //children: [
-                        //    {
-                        //        title: "Bloquear Cartão",
-                        //        icon: icons.IconIdOff,
-                        //        url: "/condominios/:id/bloquear_cartao",
-                        //    }
-                        //],
-                    },
-                    {
-                        title: "Perfil",
-                        url: "/perfil",
-                        //icon: icons.IconUser,
-                        type: "label",
-                    },
-                ],
-            }
-        ]
-    };
-
-    const handleClick = (newPlacement) => (event) => {
-        setAnchorEl(event.currentTarget);
-        setOpen((prev) => placement !== newPlacement || !prev);
-        setPlacement(newPlacement);
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                popperRef.current &&
-                !popperRef.current.contains(event.target) &&
-                buttonRef.current &&
-                !buttonRef.current.contains(event.target)
-            ) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    const {
+        TopBar,
+        SideBar,
+        Outlet,
+        Box,
+        Fade,
+        IconButton,
+        Paper,
+        Popper,
+        Typography,
+        LoginTwoTone,
+        PermIdentityOutlined,
+        SettingsTwoTone,
+        Breadcrumbs,
+        navigate,
+        anchorEl,
+        open,
+        placement,
+        buttonRef,
+        popperRef,
+        navigation,
+        handleClick,
+        Button,
+        openSide,
+        toggleDrawer
+    } = useInfos();
 
     return (
         <div className={styles.corpo}>
@@ -185,14 +141,23 @@ export const MainDash = () => {
 
             </TopBar>
             <SideBar>
-            <Breadcrumbs
-                navigation={navigation}
-                icons
-                title
-                rightAlign
-            />
-            teste conteudo
-            <Outlet />
+                <Breadcrumbs
+                    navigation={navigation}
+                    icons
+                    title
+                    rightAlign
+                />
+                <Box sx={{
+                    display: "flex",
+                    backgroundColor: "#ffffff",
+                    width: "calc(100% - 1rem)",
+                    minHeight: "calc(100% - 9rem)",
+                    borderRadius: "10px",
+                    boxShadow: "4px 4px 10px 0px rgba(37, 122, 233, 0.4)",
+                    mb: 1.5,
+                }}>
+                    <Outlet />
+                </Box>
             </SideBar>
         </div>
     )

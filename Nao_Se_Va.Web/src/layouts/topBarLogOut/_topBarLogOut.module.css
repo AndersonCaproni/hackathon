@@ -8,5 +8,5 @@
     padding: 0 4rem;
     box-shadow: 0 0 10px #257ae9;
     z-index: 1000; 
-    position: fixed;
+    position: relative;
 }

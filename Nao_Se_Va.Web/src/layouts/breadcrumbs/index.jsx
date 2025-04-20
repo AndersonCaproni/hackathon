@@ -22,20 +22,23 @@ const Breadcrumbs = ({
     const iconSX = {
         marginRight: 6,
         marginTop: -2,
-        width: "1rem",
-        height: "1rem",
+        width: "1.4rem",
+        height: "1.4rem",
     };
     const [breadcrumbs, setBreadcrumbs] = useState([]);
 
     const traverseMenu = (menu, path) => {
         for (let item of menu) {
-            if (item.url === path) {
-                return [item];
+            if (item.url) {
+                const regex = new RegExp("^" + item.url.replace(/:\w+/g, "[^/]+") + "$");
+                if (regex.test(path)) { 
+                    return [{ ...item, resolvedUrl: path }];
+                }
             }
             if (item.children) {
                 const childPath = traverseMenu(item.children, path);
                 if (childPath.length) {
-                    return [item, ...childPath];
+                    return [{ ...item }, ...childPath];
                 }
             }
         }
@@ -63,10 +66,14 @@ const Breadcrumbs = ({
                 alignItems: "center",
                 color: "text.secondary",
                 fontWeight: "bold",
-                fontSize: breadcrumb?.tamanho
+                fontSize: breadcrumb?.tamanho,
+                "&:hover":{
+                    color: "#257ae9",
+                }
+
             }}
             component={Link}
-            to={breadcrumb?.url}
+            to={breadcrumb?.resolvedUrl || breadcrumb?.url}
         >
             {icons && breadcrumb?.icon && <breadcrumb.icon style={iconSX} />}
             {breadcrumb?.title}
@@ -100,6 +107,7 @@ const Breadcrumbs = ({
                 paddingBottom: 2,
                 paddingLeft: 6,
                 paddingRight: 6,
+                borderRadius: "10px !important",
 
             }}
         >
@@ -118,13 +126,13 @@ const Breadcrumbs = ({
                     sx={{ width: "100%" }}
                 >
                     {title && !titleBottom && (
-                        <Grid item>
+                        <Grid >
                             <Typography variant="h4" className={styles.titulo} sx={{ fontWeight: 500 }}>
                                 {breadcrumbs?.[breadcrumbs?.length - 1]?.title}
                             </Typography>
                         </Grid>
                     )}
-                    <Grid item>{tempContent}</Grid>
+                    <Grid >{tempContent}</Grid>
                 </Grid>
             </Box>
         </Card>
