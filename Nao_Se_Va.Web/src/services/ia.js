@@ -7,6 +7,8 @@ export async function LlamaChat(aluno, tentativa = 1) {
         const data = `Você é uma inteligência artificial especializada em análise de evasão escolar e deve responder como um gerador de JSON, sem nenhuma explicação adicional.
 
         Você receberá a seguir um JSON com dados de um aluno.
+
+        Considere que a data atual é ${new Date().toLocaleDateString('pt-BR')} e leve isso em conta nas suas análises e cálculos.
         
         Sua tarefa é retornar exatamente o seguinte objeto JSON, com os valores calculados com base nos dados recebidos:
         
@@ -52,7 +54,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
@@ -74,7 +76,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
 
     } catch (erro) {
         console.error('Erro ao consultar LiaMA:', erro);
-        return erro;
+        throw erro;
     }
 };
 
@@ -95,7 +97,7 @@ export async function ChatMensagem(pergunta) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
@@ -107,7 +109,7 @@ export async function ChatMensagem(pergunta) {
 
     } catch (erro) {
         console.error('Erro ao consultar LiaMA:', erro);
-        return erro;
+        throw erro
     }
 };
 

@@ -127,7 +127,7 @@ const Breadcrumbs = ({
                 >
                     {title && !titleBottom && (
                         <Grid >
-                            <Typography variant="h4" className={styles.titulo} sx={{ fontWeight: 500 }}>
+                            <Typography variant="h4" className={location.pathname === '/dash/ia' ? styles.reflexoAnimado : styles.titulo} sx={{ fontWeight: 500 }}>
                                 {breadcrumbs?.[breadcrumbs?.length - 1]?.title}
                             </Typography>
                         </Grid>

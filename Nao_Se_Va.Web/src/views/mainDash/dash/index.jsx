@@ -7,6 +7,7 @@ import { borderRadius, display, fontFamily, height, padding, textAlign, width } 
 import PortalProfessor from '../../../assets/portalProfessor.png'
 import { ArrowRight } from "@mui/icons-material";
 import { useEffect, useState } from "react";
+import Efeito from '../../../components/Efeito/index'
 
 const Dash = () => {
     const [alunoUltimoAcesso, setAlunoUltimoAcesso] = useState({})
@@ -284,6 +285,7 @@ const Dash = () => {
                         {
                             coordenador?.cursosCoordenados?.map((item, index) =>
                                 <Tooltip
+                                    key={index}
                                     title={
                                         <Box sx={{ padding: 1 }}>
                                             <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
@@ -317,8 +319,7 @@ const Dash = () => {
                                             flexDirection: 'row',
                                             cursor: 'default'
                                         }}
-                                        variant='h5'
-                                        key={index}>
+                                        variant='h5'>
                                         <ArrowRight /> {item.nome}
                                     </Typography>
                                 </Tooltip>
@@ -556,12 +557,13 @@ const Dash = () => {
                         borderRadius: "10px",
                         alignSelf: "flex-start",
                         overflow: "hidden",
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        position: 'relative'
                     }}
                     onClick={() => {
                         navigate('ia')
                     }}
-                    >
+                >
                     <Box
                         sx={{
                             display: "flex",
@@ -588,6 +590,9 @@ const Dash = () => {
                         <Typography variant='h5' sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
                             Clique aqui para acessar a nossa IA
                         </Typography>
+                        <Efeito>
+
+                        </Efeito>
                     </Box>
                 </Box>
             </Box>

@@ -15,6 +15,7 @@ import {
     KeyboardArrowUp,
     Message,
     MenuBook,
+    Sync
 } from "@mui/icons-material";
 import Breadcrumbs from '../layouts/breadcrumbs';
 import Loading from '../components/Loading';
@@ -33,8 +34,10 @@ export const InfosProvider = ({ children }) => {
     const buttonRef = useRef(null);
     const popperRef = useRef(null);
     const [pergunta, setPergunta] = useState("")
-    const [listaMensagem, setListaMensagem] = useState([])
+    const [listaMensagem, setListaMensagem] = useState([{ id: 'IAPADRAOCHATUNICOESTE', nome: 'Chat IA', mensagens: [] }])
+    const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
+    const [loadingSupremo, setLoadingSupremo] = useState(false)
     const navigation = {
         items: [
             {
@@ -554,6 +557,8 @@ export const InfosProvider = ({ children }) => {
             LinearProgress,
             LlamaChat,
             Loading,
+            loadingSupremo,
+            setLoadingSupremo,
             location,
             alunos,
             openSide,
@@ -566,6 +571,8 @@ export const InfosProvider = ({ children }) => {
             setCoordenador,
             listaMensagem,
             setListaMensagem,
+            chatSelecionado,
+            setChatSelecionado,
             SideBar,
             Outlet,
             Box,
@@ -575,6 +582,7 @@ export const InfosProvider = ({ children }) => {
             Popper,
             Typography,
             LoginTwoTone,
+            Sync,
             PermIdentityOutlined,
             SettingsTwoTone,
             useRef,
@@ -594,7 +602,8 @@ export const InfosProvider = ({ children }) => {
             setLoadingResposta,
             Button,
             setAlunos,
-            AutoAwesome
+            AutoAwesome,
+            LinearProgress
         }}>
             {children}
         </InfosContext.Provider>

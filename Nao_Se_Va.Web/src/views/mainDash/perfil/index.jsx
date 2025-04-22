@@ -152,6 +152,7 @@ const Perfil = () => {
             </Box>
             <div>
                 <Accordion
+                    defaultExpanded
                     sx={{
                         border: 'none',
                         boxShadow: 'none',

@@ -16,6 +16,8 @@ export const MainDash = () => {
         Typography,
         LoginTwoTone,
         PermIdentityOutlined,
+        loadingSupremo,
+        setLoadingSupremo,
         SettingsTwoTone,
         Breadcrumbs,
         navigate,
@@ -28,7 +30,8 @@ export const MainDash = () => {
         handleClick,
         Button,
         openSide,
-        toggleDrawer
+        toggleDrawer,
+        LinearProgress
     } = useInfos();
 
     return (
@@ -74,7 +77,7 @@ export const MainDash = () => {
                 </Box>
                 <Popper
                     ref={popperRef}
-                    sx={{ 
+                    sx={{
                         zIndex: 1200,
                         minWidth: '350px'
                     }}
@@ -89,7 +92,7 @@ export const MainDash = () => {
                                 marginTop: 0.5,
                                 p: 3,
                                 borderRadius: "20px",
-                                width: "auto", 
+                                width: "auto",
                                 border: "none",
                                 boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                                 display: "flex",
@@ -98,7 +101,7 @@ export const MainDash = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
-                                <Typography sx={{ cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px" , width: '100%', textAlign: 'center', padding: 2 }}>
+                                <Typography sx={{ cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px", width: '100%', textAlign: 'center', padding: 2 }}>
                                     João Vitor Pereira de Souza
                                 </Typography>
                                 <Box sx={{
@@ -115,7 +118,7 @@ export const MainDash = () => {
                                         color: '#257ae9'
                                     }
                                 }}
-                                onClick={() => navigate('perfil')}>
+                                    onClick={() => navigate('perfil')}>
                                     <PermIdentityOutlined />
                                     <Typography variant='h7'>
                                         Perfil
@@ -163,8 +166,22 @@ export const MainDash = () => {
                     borderRadius: "10px",
                     boxShadow: "4px 4px 10px 0px rgba(37, 122, 233, 0.4)",
                     mb: 1.5,
+                    position: 'relative',
+                    overflow: "hidden",
                 }}>
-                    <Outlet />
+                    {
+                        loadingSupremo ?
+                            <LinearProgress
+                                sx={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    width: '100%',
+                                    zIndex: 99
+                                }}
+                            /> :
+
+                            <Outlet />
+                    }
                 </Box>
             </SideBar>
         </div>

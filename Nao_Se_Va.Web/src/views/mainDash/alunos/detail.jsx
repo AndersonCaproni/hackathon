@@ -1,8 +1,11 @@
-import { Box, Grid, Tooltip, Typography } from "@mui/material"
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material"
 import { useParams } from "react-router-dom";
 import { useInfos } from "../../../hooks/InfosProvider";
 import { useEffect, useState } from "react";
 import Grafico from "../../../components/Grafico";
+import Efeito from "../../../components/Efeito";
+import toast from "react-hot-toast";
+import { ChatMensagem } from "../../../services/ia";
 
 export const DetalheAluno = () => {
     const info = useParams();
@@ -14,10 +17,17 @@ export const DetalheAluno = () => {
         LinearProgress,
         demaisInformacoes,
         setDemaisInformacoes,
+        setLoadingSupremo,
+        setChatSelecionado,
         KeyboardArrowDown,
         KeyboardArrowUp,
         Collapse,
-        setAlunos
+        setAlunos,
+        Sync,
+        AutoAwesome,
+        listaMensagem,
+        navigate,
+        setListaMensagem
     } = useInfos();
     const [aluno, setAluno] = useState([]);
     const [resposta, setResposta] = useState({});
@@ -44,7 +54,7 @@ export const DetalheAluno = () => {
                     )
                 );
             }
-            else{
+            else {
                 response = alunoSelecionado.estatistica;
             }
             setResposta(response);
@@ -59,8 +69,99 @@ export const DetalheAluno = () => {
             }
         } catch (error) {
             console.error("Erro ao carregar dados:", error);
+            toast.error("Erro ao carregar os dados! Recarregue a página e se o erro persistir, consulte seu suporte")
         } finally {
             setLoadingOpen(false);
+        }
+    };
+
+    const Mensagem = async () => {
+        try {
+            const novaPergunta = {
+                mensagem: `Você é uma inteligência artificial especializada em análise de evasão escolar. A seguir, forneço os dados de um aluno:
+            
+                ${JSON.stringify(aluno)}
+            
+                Com base nesses dados, você me retornou a seguinte análise:
+            
+                ${JSON.stringify(resposta)}
+            
+                Desejo continuar esta conversa, pois tenho algumas dúvidas específicas sobre este aluno.
+            
+                Sua tarefa, neste momento, é apenas me informar que está pronto para continuar me auxiliando.
+            
+                O formato da sua resposta deve ser o seguinte:
+                "Olá, estou pronto para te ajudar com o aluno (nome do aluno). Qual a sua dúvida?"
+
+                Este formato de resposta á apenas para esta pergunta, você deve desconsiderar o formato acima nas demais perguntas que eu for fazer.
+            
+                Se eu escolher mudar de assunto você não deve aceitar, deve falar apenas do aluno mencionado, o ajudando sobre questões academicas, didaticas, ensino, etc, coisas de professor
+
+                Analise novamente os dados que forneci, pois farei perguntas a partir deles nas próximas interações.
+
+                Considere que a data atual é ${new Date().toLocaleDateString('pt-BR')} e leve isso em conta nas suas análises e cálculos.
+                `,
+                tipo: 'perguntaAluno',
+            };
+
+            const alunoChat = listaMensagem?.find(item => item.id === aluno?.id)?.mensagens || [];
+
+
+            const novaLista = [...alunoChat, novaPergunta];
+
+            setListaMensagem((mensagemAtual) => {
+                const existeChat = mensagemAtual.find(item => item.id === aluno?.id);
+
+                if (existeChat) {
+                    return mensagemAtual.map(item =>
+                        item.id === aluno?.id
+                            ? { ...item, mensagens: [...item.mensagens, novaPergunta] }
+                            : item
+                    );
+                } else {
+                    return [
+                        ...mensagemAtual,
+                        {
+                            id: aluno?.id,
+                            nome: aluno?.nome,
+                            mensagens: [novaPergunta]
+                        }
+                    ];
+                }
+            });
+
+
+            setLoadingSupremo(true);
+
+            const response = await ChatMensagem(novaLista);
+
+            setListaMensagem((mensagem) =>
+                mensagem.map((item) =>
+                    item.id === aluno?.id ?
+                        {
+                            ...item,
+                            mensagens: [
+                                ...item.mensagens,
+                                {
+                                    mensagem: `Olá, eu tenho algumas dúvidas sobre o aluno ${aluno?.nome}. Você consegue me ajudar?`,
+                                    tipo: 'pergunta',
+                                },
+                                {
+                                    mensagem: response,
+                                    tipo: 'resposta',
+                                }
+                            ],
+                        }
+                        : item
+                ))
+            setChatSelecionado(aluno?.id)
+            setLoadingSupremo(false);
+            navigate('./ia')
+
+        }
+        catch (ex) {
+            setLoadingOpen(false);
+            toast.error("Sua IA expirou, consulte seu suporte!")
         }
     };
 
@@ -645,11 +746,45 @@ export const DetalheAluno = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: 'rgb(240, 242, 245)'
+                    backgroundColor: 'rgb(240, 242, 245)',
+                    position: 'relative'
                 }}>
                     <Typography variant="h4" sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
                         Estátiscas do Aluno
                     </Typography>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            top: '50%',
+                            right: '20px',
+                            transform: 'TranslateY(-50%)'
+                        }}
+                    >
+                        <IconButton
+                            sx={{
+                                color: '#257ae9'
+                            }}
+                            onClick={async () => {
+                                setAlunos((alunos) =>
+                                    alunos.map((item) =>
+                                        item?.id === aluno?.id ?
+                                            { ...item, estatistica: null } :
+                                            item)
+                                );
+
+                                await carregarDados(aluno)
+                            }}
+                        >
+                            <Sync
+                                sx={{
+                                    fontSize: 30,
+                                }}
+                            />
+                        </IconButton>
+                    </Box>
                 </Box>
                 <Box sx={{
                     display: "flex",
@@ -781,8 +916,37 @@ export const DetalheAluno = () => {
                             </Typography>
                         </Tooltip>
                     </Box>
+                    <Box
+                        onClick={() => { Mensagem() }}
+                        sx={{
+                            borderTop: "solid 1px rgb(211, 211, 211)",
+                            width: '100%',
+                            height: 'auto',
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            display: "flex",
+                            justifyContent: 'center',
+                            alignItems: "center",
+                            textAlign: 'center',
+                            flexDirection: "row",
+                            backgroundColor: '#257ae9',
+                            cursor: 'pointer',
+                            gap: 2,
+                            position: 'relative'
+                        }}>
+                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#ffffff', width: '100%', height: '100%' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                                <AutoAwesome sx={{ fontSize: 32, fontFamily: 'PoppinsSemiBold' }} />
+                                Ficou com alguma dúvida?
+                                <br />
+                                Consulte nossa IA por aqui!
+
+                            </Box>
+                        </Typography>
+                        <Efeito />
+                    </Box>
                 </Box>
             </Box>
-        </div>
+        </div >
     )
 }

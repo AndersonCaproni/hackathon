@@ -117,7 +117,10 @@ export const Login = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 3 }}>
                                 <img src={Logo} alt='logo' className={styles.logo} />
                                 <Typography sx={{ fontFamily: 'Poppins', color: '#585757', width: '90%', textAlign: 'center' }} variant='h5'>
-                                    Olá, seja bem vindo ao nosso Portal!
+                                    Olá, Bem-Vindo ao nosso Portal!
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Poppins', color: 'rgb(156, 156, 156)', width: '90%', textAlign: 'center' }} variant='caption'>
+                                    Faça seu login para ter acesso ao nosso Portal
                                 </Typography>
                             </Box>
 
@@ -138,6 +141,9 @@ export const Login = () => {
                                     name="email"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
+                                    sx={{
+                                        borderRadius: '100px',
+                                    }}
                                     label="E-mail"
                                     inputProps={{}}
                                 />
@@ -165,6 +171,9 @@ export const Login = () => {
                                     name="password"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
+                                    sx={{
+                                        borderRadius: '100px',
+                                    }}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
@@ -207,7 +216,7 @@ export const Login = () => {
                                     sx={{
                                         backgroundColor: "#257ae9",
                                         '&:hover': {
-                                            backgroundColor:'#226ac9'
+                                            backgroundColor: '#226ac9'
                                         }
                                     }}
                                 >
