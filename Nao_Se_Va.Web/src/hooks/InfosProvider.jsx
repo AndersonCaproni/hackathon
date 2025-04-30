@@ -110,6 +110,41 @@ export const InfosProvider = ({ children }) => {
     };
     const [alunos, setAlunos] = useState([
         {
+            id: 1,
+            nome: 'Anderson Caproni de Oliveira',
+            email: 'anderson.oliveira@aluno.unifenas.br',
+            curso: 'Engenharia de Software',
+            periodo: 3,
+            possibilidadeDeEvasao: 10,
+            ultimoAcesso: '2025-03-18',
+            frequencia: 92,
+            matricula: '2022103456',
+            dataNascimento: '2001-06-25',
+            situacao: 'Ativo',
+            mediaGeral: 8.4,
+            disciplinasReprovadas: 0,
+            cargaHorariaCumprida: 960,
+            cargaHorariaTotal: 3200,
+            turno: 'Matutino',
+            modalidade: 'EAD',
+            endereco: {
+                cidade: 'Alfenas',
+                estado: 'MG',
+                bairro: 'Centro'
+            },
+            telefone: '(35) 99777-2195',
+            responsavelFinanceiro: 'Mariana Ferreira',
+            bolsista: false,
+            TipoBolsa: null,
+            NotaENEM: 750,
+            ParticipaMonitoria: true,
+            AtividadesExtracurriculares: ['Monitoria', 'Hackathon'],
+            ultimaDisciplinaAcessada: 'Ciência da Computação',
+            horasComplementaresAcumuladas: 90,
+            DocumentosPendentes: [],
+            AlertaPedagogico: false
+        },
+        {
             id: 2,
             nome: 'João Pedro Lima Ferreira OLiveira de Braga Macial',
             email: 'joaopedro.lima@gmail.com',
@@ -146,8 +181,8 @@ export const InfosProvider = ({ children }) => {
         },
         {
             id: 3,
-            nome: 'Beatriz Santos Oliveira',
-            email: 'bia.santos@gmail.com',
+            nome: 'Ana Karolina',
+            email: 'ana.k@gmail.com',
             curso: 'Engenharia de Software',
             periodo: 5,
             possibilidadeDeEvasao: 45,
@@ -167,7 +202,7 @@ export const InfosProvider = ({ children }) => {
                 estado: 'CE',
                 bairro: 'Aldeota'
             },
-            telefone: '(85) 97777-3344',
+            telefone: '(35) 99760-0578',
             responsavelFinanceiro: 'Ela mesma',
             bolsista: true,
             TipoBolsa: 'Desempenho Acadêmico',
@@ -522,8 +557,8 @@ export const InfosProvider = ({ children }) => {
     const [coordenador, setCoordenador] = useState({
         id: 1,
         nome: "Anderson Silva",
-        email: "anderson.silva@universidade.edu",
-        telefone: "(11) 98765-4321",
+        email: "hunifenas@gmail.com",
+        telefone: "(35) 99777-2195",
         titulacao: "Mestre em Engenharia de Software",
         departamentos: ["Engenharia da Computação", "Sistemas de Informação"],
         cursosCoordenados: [

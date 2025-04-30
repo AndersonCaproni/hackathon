@@ -31,7 +31,8 @@ export const MainDash = () => {
         Button,
         openSide,
         toggleDrawer,
-        LinearProgress
+        LinearProgress,
+        coordenador
     } = useInfos();
 
     return (
@@ -102,7 +103,7 @@ export const MainDash = () => {
                                 alignItems: "center",
                             }}>
                                 <Typography sx={{ cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px", width: '100%', textAlign: 'center', padding: 2 }}>
-                                    João Vitor Pereira de Souza
+                                    {coordenador?.nome}
                                 </Typography>
                                 <Box sx={{
                                     display: "flex",
