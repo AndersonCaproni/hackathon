@@ -11,6 +11,8 @@ import { sendEmail } from '../../../services/email'
 import toast from "react-hot-toast";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
+import {sendTextMessage}  from '../../../services/wpp'
+import { Chat } from '@mui/icons-material';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -87,6 +89,7 @@ export default function Mensagem() {
     };
 
     const EnviarMensagem = async () => {
+        setLoadingSupremo(true)
         const mensagemInvalido = !mensagem.trim();
         const alunoInvalido = !alunoSelecionadoMensagem || !alunoSelecionadoMensagem.email?.trim();
 
@@ -97,13 +100,17 @@ export default function Mensagem() {
             toast.error('Campos obrigatórios não preenchidos!');
         } else {
             const numeroFormatado = alunoSelecionadoMensagem?.telefone?.replace(/\D/g, '');
-            const numeroComCodigo = `55${numeroFormatado.slice(-11)}`;
+            const numeroComCodigo = `55${numeroFormatado}`;
 
-            const mensagemCodificada = encodeURIComponent(mensagem);
-            const url = `https://wa.me/${numeroComCodigo}?text=${mensagemCodificada}`;
-
-            window.open(url, '_blank');
+            try{
+              await sendTextMessage(numeroComCodigo, mensagem)
+              toast.success('Mensagem enviada com sucesso!');
+            }
+            catch(err){
+              toast.error('Erro ao enviar Mensagem, tente novamente mais tarde!');
+            }
         }
+        setLoadingSupremo(false);
     };
 
     return (

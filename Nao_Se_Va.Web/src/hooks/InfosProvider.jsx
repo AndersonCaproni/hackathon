@@ -146,15 +146,15 @@ export const InfosProvider = ({ children }) => {
         },
         {
             id: 2,
-            nome: 'João Pedro Lima Ferreira OLiveira de Braga Macial',
-            email: 'joaopedro.lima@gmail.com',
-            curso: 'Engenharia de Software',
+            nome: 'João Paulo da Silva Costa',
+            email: 'joao.spaulo@aluno.unifenas.br',
+            curso: 'Ciência da Computação',
             periodo: 3,
             possibilidadeDeEvasao: 10,
             ultimoAcesso: '2025-03-18',
             frequencia: 92,
-            matricula: '2022103456',
-            dataNascimento: '2001-06-25',
+            matricula: '204774222',
+            dataNascimento: '2001-04-26',
             situacao: 'Ativo',
             mediaGeral: 8.4,
             disciplinasReprovadas: 0,
@@ -167,7 +167,7 @@ export const InfosProvider = ({ children }) => {
                 estado: 'MG',
                 bairro: 'Savassi'
             },
-            telefone: '(31) 98888-4567',
+            telefone: '(35) 99887-9620',
             responsavelFinanceiro: 'Mariana Ferreira',
             bolsista: false,
             TipoBolsa: null,
@@ -556,9 +556,9 @@ export const InfosProvider = ({ children }) => {
 
     const [coordenador, setCoordenador] = useState({
         id: 1,
-        nome: "Anderson Silva",
+        nome: "Marcos Fernando",
         email: "hunifenas@gmail.com",
-        telefone: "(35) 99777-2195",
+        telefone: "(35) 99887-9620",
         titulacao: "Mestre em Engenharia de Software",
         departamentos: ["Engenharia da Computação", "Sistemas de Informação"],
         cursosCoordenados: [
