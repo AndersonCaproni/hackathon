@@ -113,17 +113,6 @@ export function SideBar({ children }) {
                             </p>
                         </ListItemButton>
                     </ListItem>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"curso"} disablePadding onClick={() => navigate("curso")}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{
-                                fontFamily: 'Poppins !important',
-                                ...(location.pathname === '/dash/curso' && { color: "#257ae9" })
-                            }}>
-                                <MenuBook />
-                            </ListItemIcon>
-                            <p style={{ margin: 0, marginTop: 2, marginBottom: 2, ...(location.pathname === '/dash/curso' && { color: "#257ae9" }) }}>Curso</p>
-                        </ListItemButton>
-                    </ListItem>
                     <ListItem sx={{ mb: 1, mt: 1 }} key={"mensagem"} disablePadding onClick={() => navigate("mensagem")}>
                         <ListItemButton>
                             <ListItemIcon sx={{
