@@ -155,7 +155,7 @@ export const ListAlunos = () => {
                     hoje.setHours(0, 0, 0, 0);
                     ultimoAcesso.setHours(0, 0, 0, 0);
 
-                    const totalDiasReferencia = 60;
+                    const totalDiasReferencia = 30;
 
                     const diffDias = Math.ceil(
                         (hoje.getTime() - ultimoAcesso.getTime()) / (1000 * 60 * 60 * 24)
