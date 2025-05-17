@@ -11,6 +11,7 @@
     "@mui/x-data-grid": "^7.28.3",
     "@mui/x-data-grid-generator": "^7.28.3",
     "@mui/x-data-grid-pro": "^7.28.3",
+    "@tabler/icons-react": "^3.33.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -50,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^3.0.5"
   }
 }

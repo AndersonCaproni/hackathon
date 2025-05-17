@@ -11,6 +11,7 @@ import Curso from "../views/mainDash/curso";
 import Mensagem from "../views/mainDash/mensagem";
 import Perfil from "../views/mainDash/perfil";
 import Dash from "../views/mainDash/dash";
+import PrivateRoute from './private'
 
 export const route = createBrowserRouter([
     {
@@ -28,42 +29,44 @@ export const route = createBrowserRouter([
             {
                 path: "/dash",
                 element:
-                    <InfosProvider>
-                        <MainDash />
-                    </InfosProvider>,
+                    <PrivateRoute>
+                        <InfosProvider>
+                            <MainDash />
+                        </InfosProvider>
+                    </PrivateRoute>,
                 children: [
                     {
                         path: "/dash",
-                        element: <Dash/>
+                        element: <Dash />
                     },
                     {
                         path: "/dash/alunos",
-                        children:[
+                        children: [
                             {
                                 path: "/dash/alunos",
-                                element: <ListAlunos/>
+                                element: <ListAlunos />
                             },
                             {
                                 path: "/dash/alunos/:id/detalhe",
-                                element: <DetalheAluno/>
+                                element: <DetalheAluno />
                             },
                         ]
                     },
                     {
                         path: "/dash/curso",
-                        element: <Curso/>
+                        element: <Curso />
                     },
                     {
                         path: "/dash/mensagem",
-                        element: <Mensagem/>
+                        element: <Mensagem />
                     },
                     {
                         path: "/dash/ia",
-                        element: <Chat/>
+                        element: <Chat />
                     },
                     {
                         path: "/dash/perfil",
-                        element: <Perfil/>
+                        element: <Perfil />
                     },
                 ],
             },

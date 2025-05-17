@@ -228,7 +228,7 @@ export const ListAlunos = () => {
     return (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ height: 580, width: openSide ? "calc(93vw - 240px)" : "93vw" }}>
-                <DataGrid
+                {/* <DataGrid
                     sx={style}
                     rows={alunos}
                     columns={columns}
@@ -242,7 +242,7 @@ export const ListAlunos = () => {
                     }}
                     pageSizeOptions={[10, 15, 20]}
                     disableRowSelectionOnClick
-                />
+                /> */}
             </div>
         </Box>
     );

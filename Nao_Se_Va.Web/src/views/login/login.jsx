@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logoAzulIcon.png'
+import { login } from '../../services/unifenas';
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -18,68 +19,7 @@ export const Login = () => {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            toast("Login realizado com sucesso", {
-                duration: 4000,
-                position: "top-center",
 
-                // Styling
-                style: {
-                    backgroundColor: " #00C851",
-                    color: `white`,
-                    borderRadius: "8px",
-                },
-                className: "",
-
-                // Custom Icon
-                icon: "✅",
-
-                // Change colors of success/error/loading icon
-                iconTheme: {
-                    primary: "#000",
-                    secondary: "#fff",
-                },
-
-                // Aria
-                ariaProps: {
-                    role: "status",
-                    "aria-live": "polite",
-                },
-            });
-            navigate("/dash");
-
-        } catch (err) {
-            toast("Não foi possivel realizar o login", {
-                duration: 4000,
-                position: "top-center",
-
-                // Styling
-                style: {
-                    backgroundColor: "red",
-                    color: `white`,
-                    borderRadius: "8px",
-                },
-                className: "",
-
-                // Custom Icon
-                icon: "⚠️",
-
-                // Change colors of success/error/loading icon
-                iconTheme: {
-                    primary: "#000",
-                    secondary: "#fff",
-                },
-
-                // Aria
-                ariaProps: {
-                    role: "status",
-                    "aria-live": "polite",
-                },
-            });
-        }
-    };
 
     return (
         <Grid sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100%", width: "100%" }}>
@@ -107,12 +47,62 @@ export const Login = () => {
                             .required("O E-mail é obrigatório"),
                         password: Yup.string().max(255).required("A Senha é obrigatória"),
                     })}
+                    onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                            // Simulação de login
+                            const resposta = await login(values?.email, values?.password);
+
+                            toast("Login realizado com sucesso", {
+                                duration: 4000,
+                                position: "top-center",
+                                style: {
+                                    backgroundColor: "#00C851",
+                                    color: "white",
+                                    borderRadius: "8px",
+                                },
+                                icon: "✅",
+                                iconTheme: {
+                                    primary: "#000",
+                                    secondary: "#fff",
+                                },
+                                ariaProps: {
+                                    role: "status",
+                                    "aria-live": "polite",
+                                },
+                            });
+
+                            navigate("/dash");
+
+                        } catch (err) {
+                            console.error(err)
+                            toast("Não foi possível realizar o login", {
+                                duration: 4000,
+                                position: "top-center",
+                                style: {
+                                    backgroundColor: "red",
+                                    color: "white",
+                                    borderRadius: "8px",
+                                },
+                                icon: "⚠️",
+                                iconTheme: {
+                                    primary: "#000",
+                                    secondary: "#fff",
+                                },
+                                ariaProps: {
+                                    role: "status",
+                                    "aria-live": "polite",
+                                },
+                            });
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    }}
                 >
-                    {({ errors, handleBlur, handleChange, touched, values }) => (
+                    {({ errors, handleBlur, handleChange, touched, values, handleSubmit }) => (
                         <form
                             style={{ position: "relative", display: "flex", flexDirection: "column", gap: "2rem", width: "100%" }}
                             noValidate
-                            onSubmit={(e) => onSubmit(e, values)}
+                            onSubmit={handleSubmit}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 3 }}>
                                 <img src={Logo} alt='logo' className={styles.logo} />

@@ -11,11 +11,14 @@ import {
     Typography,
     IconButton
 } from '@mui/material';
-import { People, ArrowRight, ArrowLeft, House, AutoAwesome, Message, MenuBook } from '@mui/icons-material';
+import { School, ArrowRight, ArrowLeft, House, SettingsRounded, AutoAwesome,HelpOutlineRounded, EmailRounded, MenuBook } from '@mui/icons-material';
 import { useInfos } from '../../hooks/InfosProvider';
 import styles from './_sideBar.module.css';
+import LogoAzul from '../../assets/logoAzulIcon.png'
+import { ButtonBase } from '@mui/material';
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 export function SideBar({ children }) {
     const {
@@ -26,115 +29,294 @@ export function SideBar({ children }) {
     } = useInfos();
 
     return (
-        <Box className={styles.font} sx={{ display: 'flex', minHeight: "calc(100vh - 7rem)", marginTop: '7rem' }}>
+        <Box className={styles.font} sx={{ display: 'flex', minHeight: "100vh" }}>
             <Drawer
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
+                    margin: 3,
                     '& .MuiDrawer-paper': {
                         boxShadow: "5px 5px 10px 0px rgba(37, 122, 233, 0.4)",
                         width: drawerWidth,
                         zIndex: "999 !important",
                         position: "relative !important",
+                        borderRadius: '30px',
                     },
                 }}
                 variant="persistent"
                 anchor="left"
                 open={openSide}
             >
-                <List sx={{ fontFamily: 'Poppins !important' }}>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"Dash"} disablePadding onClick={() => navigate(".")}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4 }}>
+                    <img src={LogoAzul} alt='logo' style={{ width: '7rem' }} />
+                </Box>
+                <List sx={{ fontFamily: 'Poppins !important', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1 }}>
+                    <ButtonBase
+                        onClick={() => navigate(".")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <ArticleRoundedIcon sx={{ transform: 'rotate(270deg)', color: location.pathname === '/dash' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Dashboard
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        onClick={() => navigate("alunos")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/alunos' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/alunos' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <School sx={{ color: location.pathname === '/dash/alunos' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/alunos' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Aluno
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        className={location.pathname === '/dash/ia' ? styles.reflexoAnimado : ''}
+                        onClick={() => navigate("ia")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname !== '/dash/ia' && 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/ia' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <AutoAwesome sx={{ color: location.pathname === '/dash/ia' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p
+                            style={{
+                                width: '70%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'left',
+                                fontSize: '1.2rem',
+                                fontWeight: 'bold',
                                 fontFamily: 'Poppins !important',
-                                ...(location.pathname === '/dash' && { color: "#257ae9" })
+                                color: location.pathname === '/dash/ia' ? "#ffffff" : '#257ae9'
                             }}>
-                                <House />
-                            </ListItemIcon>
-                            <p style={{ margin: 0, marginTop: 2, marginBottom: 2, ...(location.pathname === '/dash' && { color: "#257ae9" }) }}>Dashboard</p>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"Alunos"} disablePadding onClick={() => navigate("alunos")}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{
-                                fontFamily: 'Poppins !important',
-                                ...(location.pathname === '/dash/alunos' && { color: "#257ae9" })
-                            }}>
-                                <People />
-                            </ListItemIcon>
-                            <p style={{ margin: 0, marginTop: 2, marginBottom: 2, ...(location.pathname === '/dash/alunos' && { color: "#257ae9" }) }}>Alunos</p>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"Ia"} disablePadding onClick={() => navigate("ia")}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {
-                                    location.pathname === '/dash/ia' ?
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <defs>
-                                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                    <stop offset="0%" stopColor="#00ffff" stopOpacity="0.2">
-                                                        <animate attributeName="offset" values="1;0" dur="3s" repeatCount="indefinite" keyTimes="0;1" />
-                                                    </stop>
-                                                    <stop offset="0%" stopColor="#0080ff" stopOpacity="0.2" />
-                                                    <stop offset="5%" stopColor="#0080ff" stopOpacity="0.3" />
-                                                    <stop offset="10%" stopColor="#0080ff" stopOpacity="0.4" />
-                                                    <stop offset="15%" stopColor="#0080ff" stopOpacity="0.5" />
-                                                    <stop offset="40%" stopColor="#0080ff" stopOpacity="0.4" />
-                                                    <stop offset="50%" stopColor="#0080ff" stopOpacity="0.2" />
-                                                    <stop offset="60%" stopColor="#0080ff" stopOpacity="0.2" />
-                                                    <stop offset="90%" stopColor="#0080ff" stopOpacity="0.2" />
-                                                    <stop offset="100%" stopColor="#00ffff" stopOpacity="0.2" />
-                                                </linearGradient>
-                                            </defs>
-                                            <path
-                                                fill="url(#grad)"
-                                                d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25z"
-                                            />
-                                        </svg>
-                                        :
-                                        <AutoAwesome />
-                                }
-                            </ListItemIcon>
-                            <p
-                                className={location.pathname === '/dash/ia' ? styles.reflexoAnimado : ''}
-                                style={{
-                                    margin: 0,
-                                    marginTop: 2,
-                                    marginBottom: 2,
-                                }}
-                            >
-                                Chat IA
-                            </p>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"mensagem"} disablePadding onClick={() => navigate("mensagem")}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{
-                                fontFamily: 'Poppins !important',
-                                ...(location.pathname === '/dash/mensagem' && { color: "#257ae9" })
-                            }}>
-                                <Message />
-                            </ListItemIcon>
-                            <p style={{ margin: 0, marginTop: 2, marginBottom: 2, ...(location.pathname === '/dash/mensagem' && { color: "#257ae9" }) }}>Mensagem</p>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem sx={{ mb: 1, mt: 1 }} key={"curso"} disablePadding onClick={() => navigate("curso")}>
-                        <ListItemButton>
-                            <ListItemIcon sx={{
-                                fontFamily: 'Poppins !important',
-                                ...(location.pathname === '/dash/curso' && { color: "#257ae9" })
-                            }}>
-                                <MenuBook />
-                            </ListItemIcon>
-                            <p style={{ margin: 0, marginTop: 2, marginBottom: 2, ...(location.pathname === '/dash/curso' && { color: "#257ae9" }) }}>Curso</p>
-                        </ListItemButton>
-                    </ListItem>
+                            Chat IA
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        onClick={() => navigate("mensagem")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/mensagem' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/mensagem' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <EmailRounded sx={{ color: location.pathname === '/dash/mensagem' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/mensagem' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Mensagem
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        onClick={() => navigate("duvidas")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/duvidas' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/duvidas' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <HelpOutlineRounded sx={{ color: location.pathname === '/dash/duvidas' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/duvidas' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Dúvidas
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        onClick={() => navigate("perfil")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/perfil' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/perfil' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <SettingsRounded sx={{ color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Configurações
+                        </p>
+                    </ButtonBase>
                 </List>
             </Drawer>
             <Box
@@ -146,7 +328,7 @@ export function SideBar({ children }) {
                     transition: 'margin .2s',
                     marginLeft: openSide ? 0 : `-${drawerWidth}px`,
                     overflowY: 'scroll',
-                    height: "calc(100vh - 7rem)",
+                    height: "100vh",
                     '&::-webkit-scrollbar': {
                         width: '7px',
                         backgroundColor: 'transparent',
@@ -159,20 +341,6 @@ export function SideBar({ children }) {
                     },
                 }}
             >
-                <Box sx={{
-                    width: "2.5rem",
-                    height: "2.5rem",
-                    backgroundColor: '#cdd0d4',
-                    position: 'absolute',
-                    top: '2.8rem',
-                    left: '0',
-                    zIndex: 9999,
-                    borderRadius: '0px 10px 10px 0px'
-                }}>
-                    <IconButton onClick={toggleDrawer} sx={{ display: 'flex', alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-                        {openSide ? <ArrowLeft sx={{ fontSize: '2rem', color: '#fffff' }} /> : <ArrowRight sx={{ fontSize: '2rem', color: '#fffff' }} />}
-                    </IconButton>
-                </Box>
                 {children}
             </Box>
         </Box >

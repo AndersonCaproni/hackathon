@@ -13,13 +13,10 @@
             rgba(0, 255, 255, 0.2) 90%,
             rgba(0, 255, 255, 0.2) 100%);
     background-size: 200% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
     animation: reflexoTexto 3s linear infinite;
     filter: brightness(1.3);
 }
+
 
 @keyframes reflexoTexto {
     0% {

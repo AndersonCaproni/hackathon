@@ -1,13 +1,18 @@
 import { useInfos } from "../../../hooks/InfosProvider";
 import Unifenas from '../../../assets/unifenas.png';
+import robo from '../../../assets/robo.png';
 import Moodle from '../../../assets/moodle.png';
 import Gmail from '../../../assets/gmail.png';
 import styles from './_dash.module.css'
-import { borderRadius, display, fontFamily, height, padding, textAlign, width } from "@mui/system";
+import { borderRadius, display, fontFamily, fontSize, fontWeight, height, padding, textAlign, width } from "@mui/system";
 import PortalProfessor from '../../../assets/portalProfessor.png'
 import { ArrowRight } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import Efeito from '../../../components/Efeito/index'
+import { Button } from "@mui/material";
+import GridViewIcon from '@mui/icons-material/GridView';
+import { IconBrandReact } from '@tabler/icons-react';
+import dayjs from 'dayjs';
 
 const Dash = () => {
     const [alunoUltimoAcesso, setAlunoUltimoAcesso] = useState({})
@@ -30,18 +35,239 @@ const Dash = () => {
         )
     }, [])
 
+    const getColorByLastAccess = (ultimoAcesso) => {
+        const dias = dayjs().diff(dayjs(ultimoAcesso), 'day');
+
+        if (dias > 15) return '#ff0000';
+        if (dias > 5) return '#ffcc00';
+        return '#33ff00';
+    };
+
     return (
         <Box
             sx={{
                 width: '100%',
                 height: 'auto',
-                padding: 6,
+                paddingLeft: 0,
+                paddingBottom: 6,
+                paddingTop: 6,
+                paddingRight: 6,
                 display: "flex",
-                flexDirection: "row",
-                alignItems: 'center',
-                justifyContent: 'space-evenly'
+                flexDirection: "column",
+                fontFamily: 'Poppins'
             }}>
+            <Box>
+                <Typography variant='h1' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>Seja bem-vindo de volta,</Typography>
+                <Typography variant='h1' sx={{ fontSize: '3rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>
+                    {coordenador?.email &&
+                        coordenador.email.split('@')[0].charAt(0).toUpperCase() + coordenador.email.split('@')[0].slice(1)
+                    }
+                </Typography>
+            </Box>
             <Box
+                sx={{
+                    width: 'auto',
+                    height: 'auto',
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: '1rem',
+                    mt: '2rem'
+                }}>
+                <Box
+                    sx={{
+                        height: 'auto',
+                        width: 'auto',
+                        display: "flex",
+                        flexDirection: "row",
+                    }}>
+                    <Box
+                        sx={{
+                            height: 'auto',
+                            width: 'auto',
+                            display: "flex",
+                            flexDirection: "column",
+                        }}>
+                        <Box
+                            sx={{
+                                backgroundColor: '#257ae9',
+                                height: '30rem',
+                                width: '71rem',
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: 'center',
+                                borderRadius: '30px',
+                                mb: '1rem',
+                                mr: '1rem',
+                                position: 'relative',
+                                overflown: 'hidden',
+                                p: 5,
+                                gap: 9
+                            }}>
+                            <img src={robo} alt="robo" style={{ position: 'absolute', bottom: 0, right: 0, height: '30rem', width: 'auto', borderRadius: '30px' }} />
+                            <Typography variant='h1' sx={{ color: '#fff', fontWeight: 'bold', fontSize: '2.65rem', fontFamily: 'Poppins' }}>Quer fazer uma pesquisa sobre <br />determinado assunto?</Typography>
+                            <Typography variant='h1' sx={{ color: '#fff', fontSize: '1.57rem', fontFamily: 'Poppins' }}>Acesse nossa inteligência artificial para tirar<br />dúvidas, desenvolver ideias e muito mais. </Typography>
+                            <Button
+                                onClick={() => navigate('ia')}
+                                sx={{
+                                    width: '30rem',
+                                    borderRadius: '30px',
+                                    color: '#257ae9',
+                                    //color: '#fff',
+                                    padding: 2,
+                                    fontSize: '1.5rem',
+                                    fontWeight: 'bold',
+                                    height: '10rem',
+                                    display: 'flex',
+                                    alignItens: 'center',
+                                    justifyContent: 'center',
+                                    gap: 2,
+                                    backgroundColor: '#fff'
+
+                                }}
+                            //className={styles.reflexoAnimado}
+                            >
+                                <IconBrandReact size={48} className={styles.rotacao} />
+                                Clique para acessar
+                            </Button>
+                        </Box>
+                        <Box
+                            sx={{
+                                height: 'auto',
+                                width: 'auto',
+                                display: "flex",
+                                flexDirection: "row",
+                            }}>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#ffffff',
+                                    borderRadius: '30px',
+                                    height: '20rem',
+                                    width: '35rem',
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    mr: '1rem'
+                                }}>
+
+                            </Box>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#ffffff',
+                                    borderRadius: '30px',
+                                    height: '20rem',
+                                    width: '35rem',
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}>
+
+                            </Box>
+                        </Box>
+
+                    </Box>
+                    <Box
+                        sx={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '30px',
+                            height: '51rem',
+                            width: '23rem',
+                            overflowY: 'hidden'
+                        }}>
+                        <Box
+                            sx={{
+                                backgroundColor: '#ffffff',
+                                borderRadius: '30px',
+                                height: '100%',
+                                width: '100%',
+                                display: "flex",
+                                flexDirection: "column",
+                                p: 4,
+                                pl: 5,
+                                overflowY: 'scroll',
+                                gap: 2,
+                                '&::-webkit-scrollbar': {
+                                    width: '4px',
+                                    backgroundColor: 'transparent',
+
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: 'rgb(191, 201, 214)',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                },
+                            }}>
+
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    display: 'flex',
+                                    alignItens: 'center',
+                                    justifyContent: 'left',
+                                    flexDirection: 'row',
+                                    gap: 2,
+                                    mb: 1
+                                }}>
+                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                <Typography onClick={() => { navigate('./alunos')}} variant='h5' sx={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '1.8' }}>Alunos</Typography>
+                            </Box>
+                            {alunos?.map((aluno, index) => {
+                                const color = getColorByLastAccess(aluno?.user_lastaccess);
+
+                                return (
+                                    <Box key={index} sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItens: 'center',
+                                        justifyContent: 'left',
+                                        gap: 1
+                                    }}>
+                                        <div
+                                            style={{
+                                                width: '1.7rem',
+                                                height: '1.7rem',
+                                                borderRadius: '100%',
+                                                backgroundColor: color
+                                            }}
+                                        />
+                                        <Typography onClick={() => { navigate('./alunos')}} sx={{ cursor: 'pointer', fontSize: '1.2rem' }}>{aluno?.name}</Typography>
+                                    </Box>
+                                );
+                            })}
+                        </Box>
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        height: 'auto',
+                        width: 'auto',
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: '1rem'
+                    }}>
+                    <Box
+                        sx={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '30px',
+                            height: '23rem',
+                            width: '71rem',
+                            display: "flex",
+                            flexDirection: "column",
+                        }}>
+
+                    </Box>
+                    <Box
+                        sx={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '30px',
+                            height: '23rem',
+                            width: '23rem',
+                            display: "flex",
+                            flexDirection: "column",
+                        }}>
+
+                    </Box>
+                </Box>
+            </Box>
+            {/* <Box
                 sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -595,7 +821,7 @@ const Dash = () => {
                         </Efeito>
                     </Box>
                 </Box>
-            </Box>
+            </Box> */}
         </Box >
     )
 }
