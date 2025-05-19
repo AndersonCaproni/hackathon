@@ -36,7 +36,7 @@ export const InfosProvider = ({ children }) => {
     const buttonRef = useRef(null);
     const popperRef = useRef(null);
     const [pergunta, setPergunta] = useState("")
-    const [listaMensagem, setListaMensagem] = useState([{ user_id: 'IAPADRAOCHATUNICOESTE', nome: 'Chat IA', mensagens: [] }])
+    const [listaMensagem, setListaMensagem] = useState([{ user_id: 'IAPADRAOCHATUNICOESTE', name: 'Chat IA', mensagens: [] }])
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)

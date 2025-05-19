@@ -19,7 +19,6 @@ export const ListAlunos = () => {
         setAnchorEl(null);
     };
     const aplicarFiltro = () => {
-        console.log({ filtroNome, apenasAtivos });
         handleClose();
     };
 

@@ -35,7 +35,7 @@ export default function Chat() {
 
 
     useEffect(() => {
-        setMensagemDoChat(listaMensagem?.find(item => item.user_id === chatSelecionado)?.mensagens || [])
+        setMensagemDoChat(listaMensagem?.find(item => item?.user_id === chatSelecionado)?.mensagens || [])
     }, [chatSelecionado]);
 
     const Mensagem = async () => {
@@ -137,6 +137,7 @@ export default function Chat() {
                             justifyContent: 'left',
                             paddingLeft: '1rem',
                             cursor: 'pointer',
+                            backgroundColor: (listaMensagem.length > 1 && 'IAPADRAOCHATUNICOESTE' === chatSelecionado) && 'rgb(231, 231, 231)',
                             '&:hover': {
                                 backgroundColor: 'rgb(231, 231, 231)'
                             },
@@ -166,6 +167,7 @@ export default function Chat() {
                                     justifyContent: 'left',
                                     paddingLeft: '1rem',
                                     cursor: 'pointer',
+                                    backgroundColor: item?.user_id === chatSelecionado && 'rgb(231, 231, 231)',
                                     '&:hover': {
                                         backgroundColor: 'rgb(231, 231, 231)'
                                     },
@@ -173,7 +175,7 @@ export default function Chat() {
                                 }}
                                 onClick={() => { setChatSelecionado(item?.user_id) }}
                             >
-                                <Tooltip title={item?.nome}>
+                                <Tooltip title={item?.name}>
                                     <Typography
                                         variant='body2'
                                         sx={{
@@ -185,7 +187,7 @@ export default function Chat() {
                                             color: 'rgb(96, 96, 97)'
                                         }}
                                     >
-                                        {item?.nome}
+                                        {item?.name}
                                     </Typography>
                                 </Tooltip>
                             </Box>
@@ -246,7 +248,7 @@ export default function Chat() {
 
                                                 variant="h7"
                                             >
-                                                {item.mensagem}
+                                                {item?.mensagem}
                                             </Typography>
                                             <Tooltip title="Copiar">
                                                 <IconButton
@@ -263,7 +265,7 @@ export default function Chat() {
                                                             backgroundColor: 'rgb(230, 234, 241)',
                                                         }
                                                     }}
-                                                    onClick={() => navigator.clipboard.writeText(item.mensagem)}
+                                                    onClick={() => navigator.clipboard.writeText(item?.mensagem)}
                                                 >
                                                     <ContentCopy fontSize="small" />
                                                 </IconButton>

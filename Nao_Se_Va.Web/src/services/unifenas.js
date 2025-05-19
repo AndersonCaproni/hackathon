@@ -42,8 +42,7 @@ export async function obterAlunos(token) {
 export async function obterAluno(user_id) {
     try {
         const token = JSON.parse(localStorage?.getItem("token"))?.access_token;
-        console.log(token)
-        console.log(user_id)
+        
         const resposta = await axios.get(
             'http://localhost:3001/aluno',
             {
@@ -53,8 +52,6 @@ export async function obterAluno(user_id) {
                 }
             }
         );
-
-        console.log(resposta.data);
         return resposta.data;
     } catch (erro) {
         console.error("Erro ao obter aluno:", erro);

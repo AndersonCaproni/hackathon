@@ -7,6 +7,8 @@ import Efeito from "../../../components/Efeito";
 import toast from "react-hot-toast";
 import { ChatMensagem } from "../../../services/ia";
 import { obterAluno } from "../../../services/unifenas";
+import { IconChevronRight } from '@tabler/icons-react';
+import GridViewIcon from '@mui/icons-material/GridView';
 
 export const DetalheAluno = () => {
     const info = useParams();
@@ -30,27 +32,26 @@ export const DetalheAluno = () => {
         navigate,
         setListaMensagem
     } = useInfos();
-    const [aluno, setAluno] = useState([]);
+    const [aluno, setAluno] = useState(null);
     const [resposta, setResposta] = useState({});
-    const [dataGrafico, setDataGrafico] = useState([]);
+    const [dataGrafico, setDataGrafico] = useState(null);
     const [logs, setLogs] = useState([])
 
     useEffect(() => {
         const id = info?.id;
-        console.log(info)
-        console.log(id)
         const obter = async () => {
             const log = await obterAluno(id);
-            console.log(log)
+            setLogs(log?.slice(0, 7));
             const alunoSelecionado = alunos?.find((aluno) => aluno?.user_id === id);
-            console.log(alunoSelecionado)
             setAluno(alunoSelecionado);
-            carregarDados(alunoSelecionado,log);
+            if (alunoSelecionado && log) {
+                carregarDados(alunoSelecionado, log);
+            }
         }
         obter();
-    }, []);
+    }, [alunos]);
 
-    const carregarDados = async (alunoSelecionado,log) => {
+    const carregarDados = async (alunoSelecionado, log) => {
         setLoadingOpen(true);
 
         try {
@@ -68,7 +69,7 @@ export const DetalheAluno = () => {
             else {
                 response = alunoSelecionado.estatistica;
             }
-            console.log(response)
+            
             setResposta(response);
 
             if (Array.isArray(response?.DistribuicaoMotivo)) {
@@ -92,7 +93,7 @@ export const DetalheAluno = () => {
             const novaPergunta = {
                 mensagem: `Você é uma inteligência artificial especializada em análise de evasão escolar. A seguir, forneço os dados de um aluno:
             
-                ${JSON.stringify(aluno)}
+                ${JSON.stringify(logs)}
             
                 Com base nesses dados, você me retornou a seguinte análise:
             
@@ -134,14 +135,13 @@ export const DetalheAluno = () => {
                     return [
                         ...mensagemAtual,
                         {
-                            id: aluno?.user_id,
-                            nome: aluno?.nome,
+                            user_id: aluno?.user_id,
+                            name: aluno?.name,
                             mensagens: [novaPergunta]
                         }
                     ];
                 }
             });
-
 
             setLoadingSupremo(true);
 
@@ -155,7 +155,7 @@ export const DetalheAluno = () => {
                             mensagens: [
                                 ...item.mensagens,
                                 {
-                                    mensagem: `Olá, eu tenho algumas dúvidas sobre o aluno ${aluno?.nome}. Você consegue me ajudar?`,
+                                    mensagem: `Olá, eu tenho algumas dúvidas sobre o aluno ${aluno?.name}. Você consegue me ajudar?`,
                                     tipo: 'pergunta',
                                 },
                                 {
@@ -180,14 +180,452 @@ export const DetalheAluno = () => {
     return (
         <div style={{
             width: "100%",
-            alignItems: "top",
+            height: 'auto',
             display: "flex",
-            justifyContent: "center",
-            gap: '4rem',
-            paddingBottom: '4rem',
-            paddingTop: '4rem'
         }}>
-            <Box sx={{
+
+            <Box
+                sx={{
+                    width: '100%',
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3
+                }}
+            >
+                <Box
+                    sx={{
+                        backgroundColor: '#fff',
+                        width: '100%',
+                        height: 'auto',
+                        borderRadius: '30px',
+                        marginBottom: 3,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        p: 4,
+                        pl: 5,
+                        gap: 4
+                    }}
+                >
+                    {
+                        !aluno || aluno === typeof (undefined) ?
+                            <Loading loading={!aluno} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                            :
+                            <>
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'row',
+                                        gap: 2,
+                                    }}
+                                >
+                                    <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                    <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Informações do Aluno</Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'row',
+                                        gap: 2,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>ID:</Typography>
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>{aluno?.user_id}</Typography>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Nome:</Typography>
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>{aluno?.name}</Typography>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Último acesso:</Typography>
+                                        <Typography variant='h4' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>{aluno?.user_lastaccess}</Typography>
+                                    </Box>
+                                </Box>
+                            </>
+                    }
+                </Box>
+                <Box
+                    sx={{
+                        backgroundColor: '',
+                        width: '100%',
+                        height: '30rem',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginBottom: 3
+                    }}
+                >
+                    <Box
+                        sx={{
+                            backgroundColor: '#fff',
+                            width: '50%',
+                            height: '100%',
+                            display: 'flex',
+                            marginRight: 1.5,
+                            borderRadius: '30px',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            p: 4,
+                            pl: 5,
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {
+                            !dataGrafico ?
+                                <Loading loading={!dataGrafico} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                :
+                                <>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                        <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Chance de evasão</Typography>
+                                    </Box>
+                                    <Grafico dataGrafico={dataGrafico} />
+                                </>
+                        }
+                    </Box>
+                    <Box
+                        sx={{
+                            width: '50%',
+                            height: '100%',
+                            display: 'flex',
+                            marginLeft: 1.5,
+                            flexDirection: 'column',
+                            gap: 3
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                borderRadius: '30px',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    backgroundColor: '#fff',
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    borderRadius: '30px',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    p: 4,
+                                    pl: 5,
+                                    overflowY: 'auto',
+                                    overflowX: 'hidden',
+                                    gap: 3,
+                                    '&::-webkit-scrollbar': {
+                                        width: '4px',
+                                        backgroundColor: 'transparent'
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        borderRadius: '10px',
+                                        cursor: 'pointer',
+                                        backgroundColor: '#2196f3'
+                                    }
+                                }}
+                            >
+                                {
+                                    !dataGrafico ?
+                                        <Loading loading={!dataGrafico} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                        :
+                                        <>
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'left',
+                                                    flexDirection: 'row',
+                                                    gap: 2,
+                                                }}
+                                            >
+                                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                                <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Motivo</Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'top'
+                                                }}
+                                            >
+                                                <IconChevronRight color={'#2196f3'} size={30} />
+                                                <Typography
+                                                    variant="h7"
+                                                    sx={{
+                                                        fontSize: '1.3rem',
+                                                        cursor: 'default',
+                                                        textAlign: 'left',
+                                                        width: '80%',
+                                                    }}
+                                                >
+                                                    {resposta?.MotivoPrincipal}
+                                                </Typography>
+                                            </Box>
+                                        </>
+                                }
+                            </Box>
+                        </Box>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                borderRadius: '30px',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    backgroundColor: '#fff',
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    borderRadius: '30px',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    p: 4,
+                                    pl: 5,
+                                    overflowY: 'auto',
+                                    overflowX: 'hidden',
+                                    gap: 3,
+                                    '&::-webkit-scrollbar': {
+                                        width: '4px',
+                                        backgroundColor: 'transparent'
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        borderRadius: '10px',
+                                        cursor: 'pointer',
+                                        backgroundColor: '#2196f3'
+                                    }
+                                }}
+                            >
+                                {
+                                    !dataGrafico ?
+                                        <Loading loading={!dataGrafico} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                        :
+                                        <>
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'left',
+                                                    flexDirection: 'row',
+                                                    gap: 2,
+                                                }}
+                                            >
+                                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                                <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Recomendação</Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    alignItems: 'top'
+                                                }}
+                                            >
+                                                <IconChevronRight color={'#2196f3'} size={30} />
+                                                <Typography
+                                                    variant="h7"
+                                                    sx={{
+                                                        fontSize: '1.3rem',
+                                                        cursor: 'default',
+                                                        textAlign: 'left',
+                                                        width: '80%',
+                                                    }}
+                                                >
+                                                    {resposta?.Recomendacao}
+                                                </Typography>
+                                            </Box>
+                                        </>
+                                }
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        backgroundColor: '',
+                        width: '100%',
+                        height: '13.1rem',
+                        display: 'flex',
+                        flexDirection: 'row',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            backgroundColor: '#fff',
+                            width: '70%',
+                            height: '100%',
+                            display: 'flex',
+                            marginRight: 1.5,
+                            borderRadius: '30px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            p: 4,
+                            pl: 5,
+                            pr: 5,
+                            gap: 5
+                        }}
+                    >
+                        {
+                            !dataGrafico ?
+                                <Loading loading={!dataGrafico} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                :
+                                <>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                        <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Chance de evasão</Typography>
+                                    </Box>
+                                    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                                        <Box sx={{ width: '100%', mr: 1 }}>
+                                            <LinearProgress
+                                                variant="determinate"
+                                                value={Number(resposta.PossibilidadeDeEvasao)}
+                                                sx={{
+                                                    height: 40,
+                                                    borderRadius: 5,
+                                                    '& .MuiLinearProgress-bar': {
+                                                        backgroundColor:
+                                                            resposta.PossibilidadeDeEvasao >= 70
+                                                                ? '#f44336'
+                                                                : resposta.PossibilidadeDeEvasao >= 40
+                                                                    ? '#fbc02d'
+                                                                    : '#4caf50',
+                                                    },
+                                                }}
+                                            />
+                                        </Box>
+                                        <Box sx={{ minWidth: 0 }}>
+                                            <Typography variant="body1" fontWeight="bold" sx={{ fontSize: '1.5rem' }} color={resposta.PossibilidadeDeEvasao >= 70
+                                                ? '#f44336'
+                                                : resposta.PossibilidadeDeEvasao >= 40
+                                                    ? '#fbc02d'
+                                                    : '#4caf50'}>
+                                                {`${resposta.PossibilidadeDeEvasao}%`}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </>
+                        }
+                    </Box>
+                    <Box
+                        sx={{
+                            backgroundColor: '#fff',
+                            width: '30%',
+                            height: '100%',
+                            marginLeft: 1.5,
+                            borderRadius: '30px',
+                            overflow: 'hidden',
+                            position: 'relative',
+                        }}
+                    >
+                        {
+                            !dataGrafico ?
+                                <Loading loading={!dataGrafico} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                :
+                                <>
+                                    <Box
+                                        onClick={() => { Mensagem() }}
+                                        sx={{
+                                            backgroundColor: '#2196f3',
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            borderRadius: '30px',
+                                            overflow: 'hidden',
+                                            position: 'relative',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            transition: 'transform 0.2s ease-in-out',
+                                            ':hover': {
+                                                transform: 'scale(1.01)',
+                                                transition: 'transform 0.2s ease',
+                                            }
+                                        }}
+                                    >
+                                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#ffffff', width: '100%', height: '100%' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3, width: '100%', height: '100%' }}>
+                                                <AutoAwesome sx={{ fontSize: 32, fontFamily: 'PoppinsSemiBold' }} />
+                                                Ficou com alguma dúvida?
+                                                <br />
+                                                Consulte nossa IA por aqui!
+
+                                            </Box>
+                                        </Typography>
+                                        <Efeito />
+                                    </Box>
+                                </>
+                        }
+                    </Box>
+                </Box>
+            </Box >
+            {/* <Box sx={{
                 display: "flex",
                 flexDirection: "column",
                 width: "40%",
@@ -446,7 +884,7 @@ export const DetalheAluno = () => {
                         <Efeito />
                     </Box>
                 </Box>
-            </Box>
+            </Box> */}
         </div >
     )
 }
