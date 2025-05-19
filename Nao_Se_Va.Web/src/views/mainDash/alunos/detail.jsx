@@ -6,6 +6,7 @@ import Grafico from "../../../components/Grafico";
 import Efeito from "../../../components/Efeito";
 import toast from "react-hot-toast";
 import { ChatMensagem } from "../../../services/ia";
+import { obterAluno } from "../../../services/unifenas";
 
 export const DetalheAluno = () => {
     const info = useParams();
@@ -32,23 +33,33 @@ export const DetalheAluno = () => {
     const [aluno, setAluno] = useState([]);
     const [resposta, setResposta] = useState({});
     const [dataGrafico, setDataGrafico] = useState([]);
+    const [logs, setLogs] = useState([])
 
     useEffect(() => {
-        const alunoSelecionado = alunos.find((aluno) => aluno.id === Number(info?.id));
-        setAluno(alunoSelecionado);
-        carregarDados(alunoSelecionado);
+        const id = info?.id;
+        console.log(info)
+        console.log(id)
+        const obter = async () => {
+            const log = await obterAluno(id);
+            console.log(log)
+            const alunoSelecionado = alunos?.find((aluno) => aluno?.user_id === id);
+            console.log(alunoSelecionado)
+            setAluno(alunoSelecionado);
+            carregarDados(alunoSelecionado,log);
+        }
+        obter();
     }, []);
 
-    const carregarDados = async (alunoSelecionado) => {
+    const carregarDados = async (alunoSelecionado,log) => {
         setLoadingOpen(true);
 
         try {
             var response;
             if (!alunoSelecionado?.estatistica) {
-                response = await LlamaChat(alunoSelecionado);
+                response = await LlamaChat(log);
                 setAlunos((alunos) =>
                     alunos.map((aluno) =>
-                        aluno.id === alunoSelecionado.id
+                        aluno?.user_id === alunoSelecionado?.user_id
                             ? { ...aluno, estatistica: response }
                             : aluno
                     )
@@ -57,6 +68,7 @@ export const DetalheAluno = () => {
             else {
                 response = alunoSelecionado.estatistica;
             }
+            console.log(response)
             setResposta(response);
 
             if (Array.isArray(response?.DistribuicaoMotivo)) {
@@ -104,17 +116,17 @@ export const DetalheAluno = () => {
                 tipo: 'perguntaAluno',
             };
 
-            const alunoChat = listaMensagem?.find(item => item.id === aluno?.id)?.mensagens || [];
+            const alunoChat = listaMensagem?.find(item => item?.user_id === aluno?.user_id)?.mensagens || [];
 
 
             const novaLista = [...alunoChat, novaPergunta];
 
             setListaMensagem((mensagemAtual) => {
-                const existeChat = mensagemAtual.find(item => item.id === aluno?.id);
+                const existeChat = mensagemAtual.find(item => item?.user_id === aluno?.user_id);
 
                 if (existeChat) {
                     return mensagemAtual.map(item =>
-                        item.id === aluno?.id
+                        item?.user_id === aluno?.user_id
                             ? { ...item, mensagens: [...item.mensagens, novaPergunta] }
                             : item
                     );
@@ -122,7 +134,7 @@ export const DetalheAluno = () => {
                     return [
                         ...mensagemAtual,
                         {
-                            id: aluno?.id,
+                            id: aluno?.user_id,
                             nome: aluno?.nome,
                             mensagens: [novaPergunta]
                         }
@@ -137,7 +149,7 @@ export const DetalheAluno = () => {
 
             setListaMensagem((mensagem) =>
                 mensagem.map((item) =>
-                    item.id === aluno?.id ?
+                    item?.user_id === aluno?.user_id ?
                         {
                             ...item,
                             mensagens: [
@@ -154,7 +166,7 @@ export const DetalheAluno = () => {
                         }
                         : item
                 ))
-            setChatSelecionado(aluno?.id)
+            setChatSelecionado(aluno?.user_id)
             setLoadingSupremo(false);
             navigate('./ia')
 
@@ -202,519 +214,7 @@ export const DetalheAluno = () => {
                     alignItems: "center",
                     flexDirection: "column"
                 }}>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Nome:
-                        </Typography>
 
-                        <Tooltip title={aluno?.nome}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.nome}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            E-mail:
-                        </Typography>
-
-                        <Tooltip title={aluno?.email}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.email}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Telefone:
-                        </Typography>
-
-                        <Tooltip title={aluno?.telefone}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.telefone}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Matrícula:
-                        </Typography>
-
-                        <Tooltip title={aluno?.matricula}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.matricula}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Período:
-                        </Typography>
-
-                        <Tooltip title={aluno?.periodo}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.periodo}º Período
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Box sx={{
-                        borderTop: "solid 1px rgb(211, 211, 211)",
-                        width: '100%',
-                        paddingLeft: 4,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        display: "flex",
-                        justifyContent: 'left',
-                        alignItems: "baseline",
-                        textAlign: 'center',
-                        flexDirection: "row",
-                        gap: 2
-                    }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Último Acesso:
-                        </Typography>
-
-                        <Tooltip title={aluno?.ultimoAcesso}>
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    maxWidth: '80%',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    cursor: 'default'
-                                }}
-                            >
-                                {aluno?.ultimoAcesso}
-                            </Typography>
-                        </Tooltip>
-                    </Box>
-                    <Collapse sx={{ width: '100%' }} in={demaisInformacoes}>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Disciplinas Reprovadas:
-                            </Typography>
-
-                            <Tooltip title={aluno?.cargaHorariaCumprida}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.cargaHorariaCumprida} horas
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Carga Horária Total:
-                            </Typography>
-
-                            <Tooltip title={aluno?.cargaHorariaTotal}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.cargaHorariaTotal} horas
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Responsável Financeiro:
-                            </Typography>
-
-                            <Tooltip title={aluno?.responsavelFinanceiro}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.responsavelFinanceiro}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Disciplinas Reprovadas:
-                            </Typography>
-
-                            <Tooltip title={aluno?.disciplinasReprovadas}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.disciplinasReprovadas}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Média Geral:
-                            </Typography>
-
-                            <Tooltip title={aluno?.mediaGeral}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.mediaGeral} pontos
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Situação:
-                            </Typography>
-
-                            <Tooltip title={aluno?.situacao}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.situacao}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Bolsista:
-                            </Typography>
-
-                            <Tooltip title={aluno?.bolsista === true ? 'Sim' : 'Não'}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.bolsista === true ? 'Sim' : 'Não'}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Última Disciplina Acessado:
-                            </Typography>
-
-                            <Tooltip title={aluno?.ultimaDisciplinaAcessada}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '60%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.ultimaDisciplinaAcessada}
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                        <Box sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            gap: 2
-                        }}>
-                            <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                Horas Complementares:
-                            </Typography>
-
-                            <Tooltip title={aluno?.horasComplementaresAcumuladas}>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        maxWidth: '80%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    {aluno?.horasComplementaresAcumuladas} horas
-                                </Typography>
-                            </Tooltip>
-                        </Box>
-                    </Collapse>
-                    <Box
-                        onClick={() => setDemaisInformacoes(!demaisInformacoes)}
-                        sx={{
-                            borderTop: "solid 1px rgb(211, 211, 211)",
-                            width: '100%',
-                            height: '66px',
-                            paddingLeft: 4,
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            display: "flex",
-                            justifyContent: 'left',
-                            alignItems: "baseline",
-                            textAlign: 'center',
-                            flexDirection: "row",
-                            backgroundColor: '#257ae9',
-                            cursor: 'pointer',
-                            gap: 2,
-                        }}>
-                        <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#ffffff', width: '100%', height: '100%' }}>
-                            {demaisInformacoes ?
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                                    Minimizar informações
-                                    <KeyboardArrowUp sx={{ fontSize: 32, fontFamily: 'PoppinsSemiBold' }} />
-                                </Box> :
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                                    Expandir informações
-                                    <KeyboardArrowDown sx={{ fontSize: 32, fontFamily: 'PoppinsSemiBold' }} />
-                                </Box>
-                            }
-                        </Typography>
-                    </Box>
                 </Box>
             </Box>
             <Box sx={{
@@ -770,7 +270,7 @@ export const DetalheAluno = () => {
                             onClick={async () => {
                                 setAlunos((alunos) =>
                                     alunos.map((item) =>
-                                        item?.id === aluno?.id ?
+                                        item?.user_id === aluno?.user_id ?
                                             { ...item, estatistica: null } :
                                             item)
                                 );

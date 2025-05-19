@@ -52,7 +52,7 @@ export function SideBar({ children }) {
                 </Box>
                 <List sx={{ fontFamily: 'Poppins !important', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1 }}>
                     <ButtonBase
-                        onClick={() => navigate(".")}
+                        onClick={() => navigate("/dash")}
                         sx={{
                             width: '250px',
                             height: '80px',

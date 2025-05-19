@@ -21,6 +21,7 @@ import Breadcrumbs from '../layouts/breadcrumbs';
 import Loading from '../components/Loading';
 import { LlamaChat } from '../services/ia';
 import { obterAlunos } from '../services/unifenas';
+import toast from "react-hot-toast";
 
 const InfosContext = createContext();
 
@@ -35,7 +36,7 @@ export const InfosProvider = ({ children }) => {
     const buttonRef = useRef(null);
     const popperRef = useRef(null);
     const [pergunta, setPergunta] = useState("")
-    const [listaMensagem, setListaMensagem] = useState([{ id: 'IAPADRAOCHATUNICOESTE', nome: 'Chat IA', mensagens: [] }])
+    const [listaMensagem, setListaMensagem] = useState([{ user_id: 'IAPADRAOCHATUNICOESTE', nome: 'Chat IA', mensagens: [] }])
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)
@@ -118,13 +119,20 @@ export const InfosProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        setLoadingSupremo(true);
         const fetchData = async () => {
             const local = JSON.parse(localStorage?.getItem("token"));
             setCoordenador(local);
-
+            
             if (local?.access_token) {
-                const respost = await obterAlunos(local.access_token);
-                setAlunos(respost);
+                try {
+                    const respost = await obterAlunos(local.access_token);
+                    setAlunos(respost);
+                }
+                catch (erro) {
+                    console.error(erro);
+                    toast.error('Erro ao obter os Alunos, recarregue e tente novamente!')
+                }
             }
         };
 
@@ -143,6 +151,7 @@ export const InfosProvider = ({ children }) => {
 
         document.addEventListener("mousedown", handleClickOutside);
 
+        setLoadingSupremo(false);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };

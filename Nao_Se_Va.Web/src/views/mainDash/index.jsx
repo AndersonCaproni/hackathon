@@ -38,6 +38,17 @@ export const MainDash = () => {
 
     return (
         <div className={styles.corpo}>
+            {
+                loadingSupremo &&
+                <LinearProgress
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        width: '100%',
+                        zIndex: 99
+                    }}
+                />
+            }
             <SideBar>
                 <Box sx={{
                     display: "flex",
@@ -46,19 +57,7 @@ export const MainDash = () => {
                     position: 'relative',
                     overflow: "hidden",
                 }}>
-                    {
-                        loadingSupremo ?
-                            <LinearProgress
-                                sx={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    width: '100%',
-                                    zIndex: 99
-                                }}
-                            /> :
-
-                            <Outlet />
-                    }
+                    <Outlet />
                 </Box>
             </SideBar>
         </div>

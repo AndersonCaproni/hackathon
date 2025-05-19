@@ -3,7 +3,27 @@
     height: 100%;
     position: absolute;
     top: 0;
+    padding: 10%;
 }
+
+.foto2{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    padding: 20%;
+}
+
+@keyframes flutuar {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(0); }
+}
+
+.roboAnimado {
+  animation: flutuar 3s ease-in-out infinite;
+}
+
 @font-face {
     font-family: 'Poppins';
     src: url('../../../assets/fonts/Poppins/Poppins-Regular.ttf') ;

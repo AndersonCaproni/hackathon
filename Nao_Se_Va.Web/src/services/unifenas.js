@@ -25,11 +25,45 @@ export async function obterAlunos(token) {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log(resposta?.data)
+
         return resposta.data;
     } catch (erro) {
-        console.error("Erro ao fazer login:", erro);
+        console.error("Erro ao obter alunos:", erro);
+
+        if (erro.response && erro?.response?.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
+
         throw erro;
     }
 }
 
+export async function obterAluno(user_id) {
+    try {
+        const token = JSON.parse(localStorage?.getItem("token"))?.access_token;
+        console.log(token)
+        console.log(user_id)
+        const resposta = await axios.get(
+            'http://localhost:3001/aluno',
+            {
+                params: { user_id }, // envia como query string
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            }
+        );
+
+        console.log(resposta.data);
+        return resposta.data;
+    } catch (erro) {
+        console.error("Erro ao obter aluno:", erro);
+
+        if (erro.response && erro?.response?.status === 401) {
+            //localStorage.removeItem('token');
+            //window.location.href = '/login';
+        }
+
+        throw erro;
+    }
+}

@@ -40,6 +40,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
         Dados do aluno:
         ${JSON.stringify(aluno)}
         `;
+        console.log(data)
 
         const response = await axios.post(
             'https://openrouter.ai/api/v1/chat/completions',
@@ -54,7 +55,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
@@ -97,7 +98,7 @@ export async function ChatMensagem(pergunta) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }

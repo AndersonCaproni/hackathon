@@ -1,5 +1,6 @@
 import { useInfos } from "../../../hooks/InfosProvider";
 import Unifenas from '../../../assets/unifenas.png';
+import UnifenasEscrita from '../../../assets/unifenasEscrita.png';
 import robo from '../../../assets/robo.png';
 import Moodle from '../../../assets/moodle.png';
 import Gmail from '../../../assets/gmail.png';
@@ -9,13 +10,18 @@ import PortalProfessor from '../../../assets/portalProfessor.png'
 import { ArrowRight } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import Efeito from '../../../components/Efeito/index'
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import GridViewIcon from '@mui/icons-material/GridView';
-import { IconBrandReact } from '@tabler/icons-react';
+import { IconBrandReact, IconMessageChatbotFilled } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+import { LineChart } from "@mui/x-charts";
+import Loading from "../../../components/Loading";
 
 const Dash = () => {
-    const [alunoUltimoAcesso, setAlunoUltimoAcesso] = useState({})
+
+    const [labels, setLabels] = useState([])
+    const [dias, setDias] = useState([])
+    const [acessosPorDia, setAcessosPorDia] = useState([])
 
     const {
         Box,
@@ -24,16 +30,27 @@ const Dash = () => {
         alunos,
         Tooltip,
         AutoAwesome,
-        navigate
+        navigate,
+        setLoadingSupremo
     } = useInfos()
 
+
     useEffect(() => {
-        setAlunoUltimoAcesso(
-            alunos?.reduce((min, aluno) => {
-                return new Date(aluno.ultimoAcesso) < new Date(min.ultimoAcesso) ? aluno : min;
-            }, alunos?.[0])
-        )
-    }, [])
+        setLoadingSupremo(true)
+        const dias1 = Array.from({ length: 30 }, (_, i) =>
+            dayjs().subtract(29 - i, 'day').format('YYYY-MM-DD'))
+        setAcessosPorDia(
+            dias1?.map((dia) => {
+                const count = alunos?.filter((aluno) =>
+                    dayjs(aluno?.user_lastaccess).isSame(dia, 'day')
+                ).length;
+                return count;
+            }))
+        setDias(dias1);
+        setLabels(dias1.map((d) => dayjs(d).format('DD/MM')))
+        setLoadingSupremo(false)
+    }, [alunos])
+
 
     const getColorByLastAccess = (ultimoAcesso) => {
         const dias = dayjs().diff(dayjs(ultimoAcesso), 'day');
@@ -56,13 +73,38 @@ const Dash = () => {
                 flexDirection: "column",
                 fontFamily: 'Poppins'
             }}>
-            <Box>
-                <Typography variant='h1' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>Seja bem-vindo de volta,</Typography>
-                <Typography variant='h1' sx={{ fontSize: '3rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>
-                    {coordenador?.email &&
-                        coordenador.email.split('@')[0].charAt(0).toUpperCase() + coordenador.email.split('@')[0].slice(1)
-                    }
-                </Typography>
+            <Box
+                sx={{
+                    width: '100%',
+                    height: 'auto',
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontFamily: 'Poppins',
+                    pr: 6
+                }}
+            >
+                <Box>
+                    <Typography variant='h1' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>Seja bem-vindo de volta,</Typography>
+                    <Typography variant='h1' sx={{ fontSize: '3rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>
+                        {coordenador?.email &&
+                            coordenador.email.split('@')[0].charAt(0).toUpperCase() + coordenador.email.split('@')[0].slice(1)
+                        }
+                    </Typography>
+                </Box>
+                <Box>
+                    <IconButton
+                        sx={{
+                            backgroundColor: '#ffffff',
+                            color: '#257ae9',
+                            width: '3.5rem',
+                            height: '3.5rem'
+                        }}
+                    >
+                        <IconMessageChatbotFilled size={40} />
+                    </IconButton>
+                </Box>
             </Box>
             <Box
                 sx={{
@@ -99,11 +141,11 @@ const Dash = () => {
                                 mb: '1rem',
                                 mr: '1rem',
                                 position: 'relative',
-                                overflown: 'hidden',
+                                overflow: 'hidden',
                                 p: 5,
                                 gap: 9
                             }}>
-                            <img src={robo} alt="robo" style={{ position: 'absolute', bottom: 0, right: 0, height: '30rem', width: 'auto', borderRadius: '30px' }} />
+                            <img className={styles.roboAnimado} src={robo} alt="robo" style={{ position: 'absolute', bottom: 0, right: 0, height: '30rem', width: 'auto', borderRadius: '30px' }} />
                             <Typography variant='h1' sx={{ color: '#fff', fontWeight: 'bold', fontSize: '2.65rem', fontFamily: 'Poppins' }}>Quer fazer uma pesquisa sobre <br />determinado assunto?</Typography>
                             <Typography variant='h1' sx={{ color: '#fff', fontSize: '1.57rem', fontFamily: 'Poppins' }}>Acesse nossa inteligência artificial para tirar<br />dúvidas, desenvolver ideias e muito mais. </Typography>
                             <Button
@@ -118,7 +160,7 @@ const Dash = () => {
                                     fontWeight: 'bold',
                                     height: '10rem',
                                     display: 'flex',
-                                    alignItens: 'center',
+                                    alignItems: 'center',
                                     justifyContent: 'center',
                                     gap: 2,
                                     backgroundColor: '#fff'
@@ -145,9 +187,137 @@ const Dash = () => {
                                     width: '35rem',
                                     display: "flex",
                                     flexDirection: "column",
-                                    mr: '1rem'
+                                    mr: '1rem',
+                                    p: 4,
+                                    pl: 5
                                 }}>
 
+                                {
+                                    !alunos ?
+                                        <Loading loading={!alunos} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                        :
+                                        <>
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'left',
+                                                    flexDirection: 'row',
+                                                    gap: 2,
+                                                    mb: 1
+                                                }}
+                                            >
+                                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                                <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Balanço</Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'row'
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column',
+                                                        width: 'calc(100% - 1rem)'
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: '6rem',
+                                                            fontFamily: 'Poppins',
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}>
+                                                        {(alunos?.filter(aluno => {
+                                                            const dias = dayjs().diff(dayjs(aluno.user_lastaccess), 'day');
+                                                            return dias > 10;
+                                                        }))?.length}
+                                                    </Typography>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            flexDirection: 'row',
+                                                            gap: 1
+                                                        }}
+                                                    >
+                                                        <div style={{ width: '1rem', height: '1rem', borderRadius: '100%', backgroundColor: '#ff0000' }}></div>
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: '1.5rem',
+                                                                fontFamily: 'Poppins',
+                                                                m: 0,
+                                                                p: 0,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}>
+                                                            Ausentes
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <div style={{ width: '2px', height: '100%', backgroundColor: '#257ae9' }} />
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column',
+                                                        width: '100%'
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: '6rem',
+                                                            fontFamily: 'Poppins',
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}>
+                                                        {(alunos?.filter(aluno => {
+                                                            const dias = dayjs().diff(dayjs(aluno.user_lastaccess), 'day');
+                                                            return dias < 10;
+                                                        }))?.length}
+                                                    </Typography>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            flexDirection: 'row',
+                                                            gap: 1
+                                                        }}
+                                                    >
+                                                        <div style={{ width: '1rem', height: '1rem', borderRadius: '100%', backgroundColor: '#33ff00' }}></div>
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: '1.5rem',
+                                                                fontFamily: 'Poppins',
+                                                                m: 0,
+                                                                p: 0,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}>
+                                                            Ativos
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </>
+                                }
                             </Box>
                             <Box
                                 sx={{
@@ -157,11 +327,86 @@ const Dash = () => {
                                     width: '35rem',
                                     display: "flex",
                                     flexDirection: "column",
+                                    p: 4,
+                                    ol: 5
                                 }}>
-
+                                {
+                                    !alunos ?
+                                        <Loading loading={!alunos} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                        :
+                                        <>
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'left',
+                                                    flexDirection: 'row',
+                                                    gap: 2,
+                                                    mb: 1
+                                                }}
+                                            >
+                                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                                <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Total de Alunos</Typography>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'row'
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column',
+                                                        width: 'calc(100% - 1rem)'
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: '6rem',
+                                                            fontFamily: 'Poppins',
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}>
+                                                        {alunos?.length}
+                                                    </Typography>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            flexDirection: 'row',
+                                                            gap: 1
+                                                        }}
+                                                    >
+                                                        <div style={{ width: '1rem', height: '1rem', borderRadius: '100%', backgroundColor: '#2196f3' }}></div>
+                                                        <Typography
+                                                            sx={{
+                                                                fontSize: '1.5rem',
+                                                                fontFamily: 'Poppins',
+                                                                m: 0,
+                                                                p: 0,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                            }}>
+                                                            Alunos
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </>
+                                }
                             </Box>
                         </Box>
-
                     </Box>
                     <Box
                         sx={{
@@ -194,44 +439,50 @@ const Dash = () => {
                                     cursor: 'pointer',
                                 },
                             }}>
+                            {
+                                !alunos ?
+                                    <Loading loading={!alunos} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                    :
+                                    <>
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                                height: 'auto',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'left',
+                                                flexDirection: 'row',
+                                                gap: 2,
+                                                mb: 1
+                                            }}>
+                                            <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                            <Typography onClick={() => { navigate('./alunos') }} variant='h5' sx={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '1.8', fontFamily: 'Poppins' }}>Alunos</Typography>
+                                        </Box>
+                                        {alunos?.map((aluno, index) => {
+                                            const color = getColorByLastAccess(aluno?.user_lastaccess);
 
-                            <Box
-                                sx={{
-                                    width: '100%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    alignItens: 'center',
-                                    justifyContent: 'left',
-                                    flexDirection: 'row',
-                                    gap: 2,
-                                    mb: 1
-                                }}>
-                                <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
-                                <Typography onClick={() => { navigate('./alunos')}} variant='h5' sx={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '1.8' }}>Alunos</Typography>
-                            </Box>
-                            {alunos?.map((aluno, index) => {
-                                const color = getColorByLastAccess(aluno?.user_lastaccess);
-
-                                return (
-                                    <Box key={index} sx={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItens: 'center',
-                                        justifyContent: 'left',
-                                        gap: 1
-                                    }}>
-                                        <div
-                                            style={{
-                                                width: '1.7rem',
-                                                height: '1.7rem',
-                                                borderRadius: '100%',
-                                                backgroundColor: color
-                                            }}
-                                        />
-                                        <Typography onClick={() => { navigate('./alunos')}} sx={{ cursor: 'pointer', fontSize: '1.2rem' }}>{aluno?.name}</Typography>
-                                    </Box>
-                                );
-                            })}
+                                            return (
+                                                <Box key={index} sx={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    alignItems: 'center',
+                                                    justifyContent: 'left',
+                                                    gap: 1
+                                                }}>
+                                                    <div
+                                                        style={{
+                                                            width: '1.7rem',
+                                                            height: '1.7rem',
+                                                            borderRadius: '100%',
+                                                            backgroundColor: color
+                                                        }}
+                                                    />
+                                                    <Typography onClick={() => { navigate(`./alunos/${aluno?.user_id}/detalhe`) }} sx={{ cursor: 'pointer', fontSize: '1.2rem', fontFamily: 'Poppins' }}>{aluno?.name}</Typography>
+                                                </Box>
+                                            );
+                                        })}
+                                    </>
+                            }
                         </Box>
                     </Box>
                 </Box>
@@ -251,8 +502,44 @@ const Dash = () => {
                             width: '71rem',
                             display: "flex",
                             flexDirection: "column",
+                            p: 4
                         }}>
 
+                        {
+                            !alunos ?
+                                <Loading loading={!alunos} style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+                                :
+                                <>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'left',
+                                            flexDirection: 'row',
+                                            gap: 2,
+                                            mb: 1
+                                        }}
+                                    >
+                                        <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                                        <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Acessos</Typography>
+                                    </Box>
+                                    <LineChart
+                                        xAxis={[{ data: labels, scaleType: 'point' }]}
+                                        series={[
+                                            {
+                                                data: acessosPorDia,
+                                                label: 'Acessos por dia',
+                                                showMark: true,
+                                            },
+                                        ]}
+                                        height={270}
+                                        grid={{ vertical: true, horizontal: true }}
+                                        tooltip={{ trigger: 'axis' }}
+                                    />
+                                </>
+                        }
                     </Box>
                     <Box
                         sx={{
@@ -262,566 +549,313 @@ const Dash = () => {
                             width: '23rem',
                             display: "flex",
                             flexDirection: "column",
+                            p: 4,
+                            gap: 3
                         }}>
-
-                    </Box>
-                </Box>
-            </Box>
-            {/* <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "50%",
-                    height: "auto",
-                    alignSelf: "flex-start",
-                    gap: 6
-                }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
-                        height: "auto",
-                        border: "solid 1px rgb(211, 211, 211)",
-                        borderRadius: "10px",
-                        alignSelf: "flex-start",
-                        overflow: "hidden",
-                    }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            textAlign: 'center',
-                            backgroundColor: 'rgb(240, 242, 245)'
-                        }}>
-                        <Typography variant="h4" sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Aluno que a mais tempo não acessa as aulas
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 'auto',
-                            display: 'flex',
-                            alignItems: 'left',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                        }}>
-                        {
-                            alunoUltimoAcesso &&
-                            <>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: 'auto',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'left',
+                                flexDirection: 'row',
+                                gap: 2,
+                                mb: 1
+                            }}
+                        >
+                            <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
+                            <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Links úteis</Typography>
+                        </Box>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                height: 'auto',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'left',
+                                flexDirection: 'row',
+                                gap: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
                                     width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
+                                    height: 'auto',
+                                    display: 'flex',
+                                    alignItems: 'center',
                                     justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Nome:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.nome}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.nome}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        E-mail:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.email}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.email}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Telefone:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.telefone}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.telefone}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Matrícula:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.matricula}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.matricula}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Curso:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.curso}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.curso}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                            </>
-                        }
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
-                        height: "auto",
-                        border: "solid 1px rgb(211, 211, 211)",
-                        borderRadius: "10px",
-                        alignSelf: "flex-start",
-                        overflow: "hidden",
-                    }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: 'rgb(240, 242, 245)'
-                        }}>
-                        <Typography variant="h4" sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Cursos Coordenados
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 'auto',
-                            padding: 6,
-                            display: 'flex',
-                            alignItems: 'left',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            gap: 6
-                        }}>
-                        {
-                            coordenador?.cursosCoordenados?.map((item, index) =>
-                                <Tooltip
-                                    key={index}
-                                    title={
-                                        <Box sx={{ padding: 1 }}>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                                                Carga Horária:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.cargaHoraria} horas
-                                            </Typography>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 1 }}>
-                                                Curso:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.nome}
-                                            </Typography>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 1 }}>
-                                                Modalidade:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.modalidade}
-                                            </Typography>
-                                        </Box>
-                                    }
-                                    arrow
-                                    placement="top"
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    mb: 1
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        mb: 1
+                                    }}
                                 >
-                                    <Typography
+                                    <Box
                                         sx={{
-                                            fontFamily: 'Poppins',
+                                            width: '100%',
+                                            height: 'auto',
                                             display: 'flex',
                                             alignItems: 'center',
+                                            justifyContent: 'space-evenly',
                                             flexDirection: 'row',
-                                            cursor: 'default'
+                                        }}>
+                                        <Box sx={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            overflow: 'hidden',
+                                            borderRadius: '10px',
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            boxShadow: '0px 0px 10px rgba(0,0,0,0.3)',
+                                            position: 'relative',
+                                            zIndex: 1,
+                                            '&:hover .hover-text': {
+                                                opacity: 1,
+                                            }
                                         }}
-                                        variant='h5'>
-                                        <ArrowRight /> {item.nome}
-                                    </Typography>
-                                </Tooltip>
-                            )
-                        }
+                                            onClick={() => {
+                                                window.open('https://www.unifenas.br/', '_blank');
+                                            }}
+                                        >
+                                            <img className={styles.foto} src={UnifenasEscrita} alt="Unifenas" />
+                                            <Box
+                                                className="hover-text"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                                    color: '#fff',
+                                                    textAlign: 'center',
+                                                    fontSize: '0.8rem',
+                                                    padding: '0.3rem',
+                                                    opacity: 0,
+                                                    transition: 'opacity 0.3s ease-in-out',
+                                                    zIndex: 2
+                                                }}
+                                            >
+                                                Unifenas
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        mb: 1
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-evenly',
+                                            flexDirection: 'row',
+                                        }}>
+                                        <Box sx={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            overflow: 'hidden',
+                                            borderRadius: '10px',
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            boxShadow: '0px 0px 10px rgba(0,0,0,0.3)',
+                                            position: 'relative',
+                                            zIndex: 1,
+                                            '&:hover .hover-text': {
+                                                opacity: 1,
+                                            }
+                                        }}
+                                            onClick={() => {
+                                                window.open('https://unifenas.lyceum.com.br/DOnline/DOnline/avisos/TDOL303D.tp', '_blank');
+                                            }}
+                                        >
+                                            <img className={styles.foto2} src={Unifenas} alt="Unifenas" />
+                                            <Box
+                                                className="hover-text"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                                    color: '#fff',
+                                                    textAlign: 'center',
+                                                    fontSize: '0.8rem',
+                                                    padding: '0.3rem',
+                                                    opacity: 0,
+                                                    transition: 'opacity 0.3s ease-in-out',
+                                                    zIndex: 2
+                                                }}
+                                            >
+                                                Portal do Professor
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'left',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    mb: 1
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        mb: 1
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-evenly',
+                                            flexDirection: 'row',
+                                        }}>
+                                        <Box sx={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            overflow: 'hidden',
+                                            borderRadius: '10px',
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            boxShadow: '0px 0px 10px rgba(0,0,0,0.3)',
+                                            position: 'relative',
+                                            zIndex: 1,
+                                            '&:hover .hover-text': {
+                                                opacity: 1,
+                                            }
+                                        }}
+                                            onClick={() => {
+                                                window.open('https://moodle.unifenas.br/login/index.php', '_blank');
+                                            }}
+                                        >
+                                            <img className={styles.foto2} src={Moodle} alt="Unifenas" />
+                                            <Box
+                                                className="hover-text"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                                    color: '#fff',
+                                                    textAlign: 'center',
+                                                    fontSize: '0.8rem',
+                                                    padding: '0.3rem',
+                                                    opacity: 0,
+                                                    transition: 'opacity 0.3s ease-in-out',
+                                                    zIndex: 2
+                                                }}
+                                            >
+                                                Moodle
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'left',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        mb: 1
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-evenly',
+                                            flexDirection: 'row',
+                                        }}>
+                                        <Box sx={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            overflow: 'hidden',
+                                            borderRadius: '10px',
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            boxShadow: '0px 0px 10px rgba(0,0,0,0.3)',
+                                            position: 'relative',
+                                            zIndex: 1,
+                                            '&:hover .hover-text': {
+                                                opacity: 1,
+                                            }
+                                        }}
+                                            onClick={() => {
+                                                window.open('https://www.gmail.com', '_blank');
+                                            }}
+                                        >
+                                            <img className={styles.foto2} src={Gmail} alt="Unifenas" />
+                                            <Box
+                                                className="hover-text"
+                                                sx={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                                    color: '#fff',
+                                                    textAlign: 'center',
+                                                    fontSize: '0.8rem',
+                                                    padding: '0.3rem',
+                                                    opacity: 0,
+                                                    transition: 'opacity 0.3s ease-in-out',
+                                                    zIndex: 2
+                                                }}
+                                            >
+                                                Gmail
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "40%",
-                    height: "auto",
-                    alignSelf: "flex-start",
-                    gap: 6
-                }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
-                        height: "auto",
-                        border: "solid 1px rgb(211, 211, 211)",
-                        borderRadius: "10px",
-                        alignSelf: "flex-start",
-                        overflow: "hidden",
-                    }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: 'rgb(240, 242, 245)'
-                        }}>
-                        <Typography variant="h4" sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Links Úteis
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 'auto',
-                            paddingTop: 6,
-                            paddingBottom: 6,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            gap: 6
-                        }}>
-                        <Box
-                            sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-evenly',
-                                flexDirection: 'row',
-                            }}>
-                            <Box sx={{
-                                width: '10rem',
-                                height: '10rem',
-                                border: "solid 1px rgb(211, 211, 211)",
-                                overflow: 'hidden',
-                                borderRadius: '10px',
-                                position: 'relative',
-                                cursor: 'pointer'
-                            }}
-                                onClick={() => {
-                                    window.open('https://www.unifenas.br/', '_blank');
-                                }}
-                            >
-                                <img className={styles.foto} src={Unifenas} alt="Unifenas" />
-                                <Box sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'relative',
-                                    backgroundColor: ' rgba(28, 80, 148, 0.6)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    '&:hover': {
-                                        backgroundColor: ' rgba(28, 80, 148,0.7)',
-                                    }
-                                }}>
-                                    <Typography
-                                        variant='h5'
-                                        className="texto-hover"
-                                        sx={{
-                                            color: '#ffffff',
-                                            fontFamily: 'Poppins'
-                                        }}
-                                    >
-                                        Unifenas
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '10rem',
-                                height: '10rem',
-                                border: "solid 1px rgb(211, 211, 211)",
-                                overflow: 'hidden',
-                                borderRadius: '10px',
-                                position: 'relative',
-                                cursor: 'pointer'
-                            }}
-                                onClick={() => {
-                                    //window.open('https://wa.me/5591999999999', '_blank');
-                                    window.open('https://unifenas.lyceum.com.br/DOnline/DOnline/avisos/TDOL303D.tp', '_blank');
-                                }}
-                            >
-                                <img className={styles.foto} src={PortalProfessor} alt="portalProfesor" />
-                                <Box sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'relative',
-                                    backgroundColor: ' rgba(28, 80, 148, 0.6)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    '&:hover': {
-                                        backgroundColor: ' rgba(28, 80, 148,0.7)',
-                                    }
-                                }}>
-                                    <Typography
-                                        variant='h5'
-                                        className="texto-hover"
-                                        sx={{
-                                            color: '#ffffff',
-                                            fontFamily: 'Poppins'
-                                        }}
-                                    >
-                                        Portal
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </Box>
-                        <Box
-                            sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-evenly',
-                                flexDirection: 'row',
-                            }}>
-                            <Box sx={{
-                                width: '10rem',
-                                height: '10rem',
-                                border: "solid 1px rgb(211, 211, 211)",
-                                overflow: 'hidden',
-                                borderRadius: '10px',
-                                position: 'relative',
-                                cursor: 'pointer'
-                            }}
-                                onClick={() => {
-                                    window.open('https://moodle.unifenas.br/login/index.php', '_blank');
-                                }}
-                            >
-                                <img className={styles.foto} src={Moodle} alt="Moodle" />
-                                <Box sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'relative',
-                                    backgroundColor: ' rgba(28, 80, 148, 0.6)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    '&:hover': {
-                                        backgroundColor: ' rgba(28, 80, 148,0.7)',
-                                    }
-                                }}>
-                                    <Typography
-                                        variant='h5'
-                                        className="texto-hover"
-                                        sx={{
-                                            color: '#ffffff',
-                                            fontFamily: 'Poppins'
-                                        }}
-                                    >
-                                        Moodle
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '10rem',
-                                height: '10rem',
-                                border: "solid 1px rgb(211, 211, 211)",
-                                overflow: 'hidden',
-                                borderRadius: '10px',
-                                position: 'relative',
-                                cursor: 'pointer'
-                            }}
-                                onClick={() => {
-                                    //window.open('https://wa.me/5591999999999', '_blank');
-                                    window.open('https://www.gmail.com', '_blank');
-                                }}
-                            >
-                                <img className={styles.foto} src={Gmail} alt="gmail" />
-                                <Box sx={{
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'relative',
-                                    backgroundColor: ' rgba(28, 80, 148, 0.6)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    '&:hover': {
-                                        backgroundColor: ' rgba(28, 80, 148,0.7)',
-                                    }
-                                }}>
-                                    <Typography
-                                        variant='h5'
-                                        className="texto-hover"
-                                        sx={{
-                                            color: '#ffffff',
-                                            fontFamily: 'Poppins'
-                                        }}
-                                    >
-                                        Gmail
-                                    </Typography>
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                        height: "auto",
-                        border: "solid 1px rgb(211, 211, 211)",
-                        borderRadius: "10px",
-                        alignSelf: "flex-start",
-                        overflow: "hidden",
-                        cursor: 'pointer',
-                        position: 'relative'
-                    }}
-                    onClick={() => {
-                        navigate('ia')
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: 'rgb(240, 242, 245)'
-                        }}>
-                        <Typography sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            <AutoAwesome sx={{ fontSize: 80 }} />
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 'auto',
-                            paddingTop: 6,
-                            paddingBottom: 6,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            gap: 6
-                        }}>
-                        <Typography variant='h5' sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Clique aqui para acessar a nossa IA
-                        </Typography>
-                        <Efeito>
-
-                        </Efeito>
-                    </Box>
-                </Box>
-            </Box> */}
         </Box >
     )
 }

@@ -1,21 +1,39 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useInfos } from '../../../hooks/InfosProvider';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Popover, TextField, Tooltip } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-
+import { IconFilter, IconMessageChatbotFilled } from '@tabler/icons-react';
+import { useState } from 'react';
 
 export const ListAlunos = () => {
     const { openSide, navigate, alunos, LinearProgress } = useInfos();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [filtroNome, setFiltroNome] = useState('');
+    const [apenasAtivos, setApenasAtivos] = useState(false);
+
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const aplicarFiltro = () => {
+        console.log({ filtroNome, apenasAtivos });
+        handleClose();
+    };
 
     const style = {
-        backgroundColor: "#f4f6f8",
+        backgroundColor: "#ffffff",
+        borderRadius: '30px',
         color: "#333",
         fontFamily: 'Poppins',
+        p: 2,
 
         fontSize: 14,
         // Bordas
         border: 'none',
-        boxShadow: "0px 0px 10px 0px rgba(37, 122, 233, 0.4)",
+        boxShadow: "0px 0px 10px rgba(37, 122, 233, 0.2)",
 
         // Células
         "& .MuiDataGrid-cell": {
@@ -29,7 +47,7 @@ export const ListAlunos = () => {
         '& .MuiDataGrid-columnHeaderTitle': {
             fontWeight: 'bold',
             color: '#000',
-            fontSize: '1rem',
+            fontSize: '1.1rem',
         },
 
 
@@ -110,32 +128,25 @@ export const ListAlunos = () => {
 
     const columns = [
         {
-            field: 'nome',
+            field: 'user_id',
+            headerName: 'ID do Aluno',
+            flex: 4,
+            editable: true,
+        },
+        {
+            field: 'name',
             headerName: 'Nome',
             flex: 4,
             editable: true,
         },
         {
-            field: 'email',
-            headerName: 'Email',
+            field: 'user_lastaccess',
+            headerName: 'Último Acesso',
             flex: 4,
             editable: true,
         },
         {
-            field: 'curso',
-            headerName: 'Curso',
-            flex: 3,
-            editable: true,
-        },
-        {
-            field: 'periodo',
-            headerName: 'Periodo',
-            flex: 2,
-            editable: true,
-            renderCell: (params) => `${params.row.periodo}º`
-        },
-        {
-            field: 'ultimoAcessoOuPorcentagem',
+            field: 'evasao',
             headerName: 'Probabilidade de Evasão',
             flex: 4,
             renderCell: (params) => {
@@ -145,7 +156,7 @@ export const ListAlunos = () => {
 
                 if (!value) {
 
-                    const valueDate = params.row?.ultimoAcesso;
+                    const valueDate = params.row?.user_lastaccess;
 
                     if (!valueDate) return null;
 
@@ -212,9 +223,9 @@ export const ListAlunos = () => {
             headerAlign: 'center',
             renderCell: (params) => (
                 <Tooltip title={"Informação do Aluno"}>
-                <IconButton sx={{ color: '#257ae9' }} onClick={() => { handleDetail(params.row?.id) }}>
-                    <InfoIcon />
-                </IconButton>
+                    <IconButton sx={{ color: '#257ae9' }} onClick={() => { handleDetail(params.row?.user_id) }}>
+                        <InfoIcon />
+                    </IconButton>
                 </Tooltip>
             ),
         },
@@ -226,23 +237,131 @@ export const ListAlunos = () => {
 
 
     return (
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ height: 580, width: openSide ? "calc(93vw - 240px)" : "93vw" }}>
-                {/* <DataGrid
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', pr: 3, flexDirection: 'column', gap: 3, mt: 3 }}>
+            <Box
+                sx={{
+                    width: '77vw',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                }}
+            >
+                <Box
+                    sx={{
+                        width: '90%'
+                    }}
+                >
+                    
+                </Box>
+                <Box
+                    sx={{
+                        width: '10%',
+                        display: 'flex',
+                        alignItems: 'right',
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                        gap: 2
+                    }}
+                >
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+
+                        <IconButton
+                            onClick={handleClick}
+                            sx={{
+                                backgroundColor: '#ffffff',
+                                color: '#257ae9',
+                                width: '3.5rem',
+                                height: '3.5rem',
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                zIndex: 20,
+                                boxShadow: 2,
+                            }}
+                        >
+                            <IconFilter size={30} />
+                        </IconButton>
+                        <Popover
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            PaperProps={{
+                                sx: {
+                                    mt: 1,
+                                    zIndex: 5,
+                                    overflow: 'visible',
+                                    borderRadius: 2,
+                                    p: 3
+                                },
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 12,
+                                }}
+                            >
+                                <TextField
+                                    fullWidth
+                                    label="ID"
+                                    variant="outlined"
+                                    margin="dense"
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: '999px',
+                                        },
+                                    }}
+                                />
+                                <TextField
+                                    fullWidth
+                                    label="Nome"
+                                    variant="outlined"
+                                    margin="dense"
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: '999px',
+                                        },
+                                    }}
+                                />
+                                <Button variant="contained" fullWidth onClick={aplicarFiltro}>
+                                    Aplicar Filtro
+                                </Button>
+                            </div>
+                        </Popover>
+                    </div>
+                    <IconButton
+                        sx={{
+                            backgroundColor: '#ffffff',
+                            color: '#257ae9',
+                            width: '3.5rem',
+                            height: '3.5rem'
+                        }}
+                    >
+                        <IconMessageChatbotFilled size={40} />
+                    </IconButton>
+                </Box>
+            </Box>
+            <div style={{ height: 820, width: "77vw" }}>
+                <DataGrid
                     sx={style}
                     rows={alunos}
                     columns={columns}
                     localeText={localeText}
+                    getRowId={(row) => row.user_id}
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 10,
+                                pageSize: 20,
                             },
                         },
                     }}
-                    pageSizeOptions={[10, 15, 20]}
+                    pageSizeOptions={[20, 25, 30]}
                     disableRowSelectionOnClick
-                /> */}
+                />
             </div>
         </Box>
     );
