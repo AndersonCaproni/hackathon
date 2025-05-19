@@ -2,6 +2,7 @@ import { Padding } from '@mui/icons-material';
 import { useInfos } from '../../hooks/InfosProvider';
 import styles from './_mainDash.module.css';
 import { useEffect } from 'react';
+import ChatBot from '../../components/ChatBot';
 
 
 export const MainDash = () => {
@@ -60,6 +61,7 @@ export const MainDash = () => {
                     <Outlet />
                 </Box>
             </SideBar>
+            <ChatBot/>
         </div>
     )
 }

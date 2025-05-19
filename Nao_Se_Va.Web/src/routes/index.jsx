@@ -7,7 +7,7 @@ import { InfosProvider } from "../hooks/InfosProvider";
 import { ListAlunos } from "../views/mainDash/alunos/list";
 import { DetalheAluno } from "../views/mainDash/alunos/detail";
 import Chat from "../views/mainDash/chat/chat";
-import Curso from "../views/mainDash/curso";
+import Duvidas from "../views/mainDash/duvidas";
 import Mensagem from "../views/mainDash/mensagem";
 import Perfil from "../views/mainDash/perfil";
 import Dash from "../views/mainDash/dash";
@@ -53,8 +53,8 @@ export const route = createBrowserRouter([
                         ]
                     },
                     {
-                        path: "/dash/curso",
-                        element: <Curso />
+                        path: "/dash/duvidas",
+                        element: <Duvidas />
                     },
                     {
                         path: "/dash/mensagem",

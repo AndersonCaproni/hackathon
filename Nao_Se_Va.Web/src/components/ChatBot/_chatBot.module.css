@@ -1,0 +1,100 @@
+.pagina {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+.corpo {
+    width: 45rem;
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    gap: 40px;
+    padding: 30px 20px 90px 20px;
+}
+
+.corpo::-webkit-scrollbar {
+    width: 4px;
+    background-color: transparent;
+}
+
+.corpo::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #eef1f5;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 5rem;
+    position: absolute;
+    bottom: 0;
+    gap: 7px;
+    z-index: 9999;
+    padding: 20px 0px;
+    background-color: transparent;
+}
+
+.text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    position: relative;
+    gap: 10px;
+}
+
+
+.side::-webkit-scrollbar {
+    width: 2px;
+    background-color: transparent;
+}
+
+.side::-webkit-scrollbar-thumb {
+    background-color: #8a8d928f;
+    cursor: pointer;
+}
+
+.reflexoAnimado {
+    background: linear-gradient(120deg,
+            rgba(0, 255, 255, 0.2) 0%,
+            rgba(0, 255, 255, 0.2) 10%,
+            rgba(0, 128, 255, 0.4) 20%,
+            rgba(128, 0, 255, 0.6) 50%,
+            rgba(0, 128, 255, 0.35) 80%,
+            rgba(0, 255, 255, 0.2) 90%,
+            rgba(0, 255, 255, 0.2) 100%);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: reflexoTexto 3s linear infinite;
+    filter: brightness(1.3);
+    font-family: 'Poppins';
+}
+
+@keyframes reflexoTexto {
+    0% {
+        background-position: -100% 0%;
+    }
+
+    100% {
+        background-position: 100% 0%;
+    }
+}
+
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../../assets/fonts/Poppins/Poppins-SemiBold.ttf');
+}

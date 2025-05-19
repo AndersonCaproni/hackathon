@@ -26,6 +26,7 @@ import toast from "react-hot-toast";
 const InfosContext = createContext();
 
 export const InfosProvider = ({ children }) => {
+    const [ativoBot, setAtivoBot] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -40,6 +41,8 @@ export const InfosProvider = ({ children }) => {
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)
+    const [mensagemBot, setMensagemBot] = useState([{ tipo: 'pergunta', mensagem: `ddddddddddd ddddddddddddddd dddddddddd dddddddddddddd dddddd dddddd ddddddd ddddd ddddd dddddd dddddddd ddddddddddddd ddddd dddddd dddddd ddd dddd ddddd dddddddddd dd dddd dddddd dddd ddddd ddddddd ddddddd ddddd dddddd dddd ddddddddd dddddd ddddddd dddd dddd ddddd ddd dddddd dddddddd dddddd ddddddd dddddddddddddd ddddddd ddddddd ddddddd dddddddd dddddd dddd dddddddd ddddddd dddd ddddd dddddddddddd dddddddd dddd ddd dddddddd dd ddddddddddd dddddddd dd dddd ddd dddddd dddd dddddd ddddddddd dddddd ddddd dddddd ddddd dddddd ddddd ddd d ddddd ddddd d ddddddddddddd dd ddd ddd ddddd dd dddd ddd` }, { tipo: 'resposta', mensagem: `ddddddddddd ddddddddddddddd dddddddddd dddddddddddddd dddddd dddddd ddddddd ddddd ddddd dddddd dddddddd ddddddddddddd ddddd dddddd dddddd ddd dddd ddddd dddddddddd dd dddd dddddd dddd ddddd ddddddd ddddddd ddddd dddddd dddd ddddddddd dddddd ddddddd dddd dddd ddddd ddd dddddd dddddddd dddddd ddddddd dddddddddddddd ddddddd ddddddd ddddddd dddddddd dddddd dddd dddddddd ddddddd dddd ddddd dddddddddddd dddddddd dddd ddd dddddddd dd ddddddddddd dddddddd dd dddd ddd dddddd dddd dddddd ddddddddd dddddd ddddd dddddd ddddd dddddd ddddd ddd d ddddd ddddd d ddddddddddddd dd ddd ddd ddddd dd dddd ddd` }]);
+    const [perguntaBot, setPerguntaBot] = useState('');
     const navigation = {
         items: [
             {
@@ -91,12 +94,12 @@ export const InfosProvider = ({ children }) => {
                         target: false,
                     },
                     {
-                        id: "curso",
-                        title: "Curso",
+                        id: "duvidas",
+                        title: "Duvidas",
                         type: "item",
                         icon: MenuBook,
                         tamanho: "1rem",
-                        url: "/dash/curso",
+                        url: "/dash/duvidas",
                         target: false,
                     },
                     {
@@ -118,12 +121,27 @@ export const InfosProvider = ({ children }) => {
         setPlacement(newPlacement);
     };
 
+    const corpoRefBot = useRef(null);
+
+
+    const scrollToBottomBot = () => {
+        if (corpoRefBot.current) {
+            corpoRefBot.current.scrollTop = corpoRefBot.current.scrollHeight;
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottomBot();
+    }, [mensagemBot, perguntaBot, ativoBot]);
+
+    useEffect(( ) => {console.log(ativoBot);scrollToBottomBot();},[ativoBot])
+
     useEffect(() => {
         setLoadingSupremo(true);
         const fetchData = async () => {
             const local = JSON.parse(localStorage?.getItem("token"));
             setCoordenador(local);
-            
+
             if (local?.access_token) {
                 try {
                     const respost = await obterAlunos(local.access_token);
@@ -163,8 +181,17 @@ export const InfosProvider = ({ children }) => {
         setOpenSide(!openSide);
     };
 
+    const handleCloseBot = () => {
+        setAtivoBot(false)
+    }
+
+    const hanbleOpenBot = () => {
+        setAtivoBot(true)
+    }
+
     return (
         <InfosContext.Provider value={{
+            corpoRefBot,
             Tooltip,
             Collapse,
             KeyboardArrowDown,
@@ -220,7 +247,15 @@ export const InfosProvider = ({ children }) => {
             Button,
             setAlunos,
             AutoAwesome,
-            LinearProgress
+            LinearProgress,
+            ativoBot,
+            setAtivoBot,
+            handleCloseBot,
+            hanbleOpenBot,
+            perguntaBot,
+            setPerguntaBot,
+            mensagemBot,
+
         }}>
             {children}
         </InfosContext.Provider>

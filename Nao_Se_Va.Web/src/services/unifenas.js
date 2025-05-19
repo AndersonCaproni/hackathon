@@ -52,13 +52,14 @@ export async function obterAluno(user_id) {
                 }
             }
         );
+        console.log(resposta.data)
         return resposta.data;
     } catch (erro) {
         console.error("Erro ao obter aluno:", erro);
 
         if (erro.response && erro?.response?.status === 401) {
-            //localStorage.removeItem('token');
-            //window.location.href = '/login';
+            localStorage.removeItem('token');
+            window.location.href = '/login';
         }
 
         throw erro;

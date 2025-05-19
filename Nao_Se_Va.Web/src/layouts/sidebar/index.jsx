@@ -11,12 +11,13 @@ import {
     Typography,
     IconButton
 } from '@mui/material';
-import { School, ArrowRight, ArrowLeft, House, SettingsRounded, AutoAwesome,HelpOutlineRounded, EmailRounded, MenuBook } from '@mui/icons-material';
+import { School, ArrowRight, ArrowLeft, House, SettingsRounded, AutoAwesome, HelpOutlineRounded, EmailRounded, MenuBook } from '@mui/icons-material';
 import { useInfos } from '../../hooks/InfosProvider';
 import styles from './_sideBar.module.css';
 import LogoAzul from '../../assets/logoAzulIcon.png'
 import { ButtonBase } from '@mui/material';
 import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 300;
 
@@ -185,7 +186,7 @@ export function SideBar({ children }) {
                             Chat IA
                         </p>
                     </ButtonBase>
-                    <ButtonBase
+                    {/* <ButtonBase
                         onClick={() => navigate("mensagem")}
                         sx={{
                             width: '250px',
@@ -228,7 +229,7 @@ export function SideBar({ children }) {
                         }}>
                             Mensagem
                         </p>
-                    </ButtonBase>
+                    </ButtonBase> */}
                     <ButtonBase
                         onClick={() => navigate("duvidas")}
                         sx={{
@@ -273,7 +274,7 @@ export function SideBar({ children }) {
                             Dúvidas
                         </p>
                     </ButtonBase>
-                    <ButtonBase
+                    {/* <ButtonBase
                         onClick={() => navigate("perfil")}
                         sx={{
                             width: '250px',
@@ -315,6 +316,53 @@ export function SideBar({ children }) {
                             color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9'
                         }}>
                             Configurações
+                        </p>
+                    </ButtonBase> */}
+                    <ButtonBase
+                        onClick={() => {
+                            localStorage.removeItem('token')
+                            window.location.href = '/';
+                        }}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/perfil' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/perfil' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <LogoutIcon sx={{ transform: 'rotate(180deg)', color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Sair
                         </p>
                     </ButtonBase>
                 </List>

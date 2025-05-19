@@ -6,7 +6,7 @@ import { IconFilter, IconMessageChatbotFilled } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export const ListAlunos = () => {
-    const { openSide, navigate, alunos, LinearProgress } = useInfos();
+    const { openSide, navigate, alunos, LinearProgress , hanbleOpenBot} = useInfos();
     const [anchorEl, setAnchorEl] = useState(null);
     const [filtroNome, setFiltroNome] = useState('');
     const [apenasAtivos, setApenasAtivos] = useState(false);
@@ -333,6 +333,7 @@ export const ListAlunos = () => {
                         </Popover>
                     </div>
                     <IconButton
+                    onClick={hanbleOpenBot}
                         sx={{
                             backgroundColor: '#ffffff',
                             color: '#257ae9',

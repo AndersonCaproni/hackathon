@@ -31,7 +31,8 @@ const Dash = () => {
         Tooltip,
         AutoAwesome,
         navigate,
-        setLoadingSupremo
+        setLoadingSupremo,
+        hanbleOpenBot
     } = useInfos()
 
 
@@ -95,6 +96,7 @@ const Dash = () => {
                 </Box>
                 <Box>
                     <IconButton
+                        onClick={hanbleOpenBot}
                         sx={{
                             backgroundColor: '#ffffff',
                             color: '#257ae9',

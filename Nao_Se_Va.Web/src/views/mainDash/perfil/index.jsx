@@ -7,6 +7,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
+import { useEffect, useState } from "react";
+import { obterAluno } from "../../../services/unifenas";
 
 const Perfil = () => {
     const {
@@ -14,8 +16,45 @@ const Perfil = () => {
         setCoordenador,
         Box,
         Typography,
-        Tooltip
+        Tooltip,
+        alunos
     } = useInfos()
+
+    const [resumoCursos, setResumoCursos] = useState([]);
+
+    useEffect(() => {
+        const processarDados = async () => {
+            const cursosMap = {};
+            const dados = [];
+
+            for (const item of alunos|| []) {
+                const resposta = await obterAluno(item.user_id);
+                resposta.forEach(x => dados.push(x));
+            }
+
+            dados.forEach(item => {
+                const curso = item.course_fullname;
+                const aluno = item.user_id;
+
+                if (!cursosMap[curso]) {
+                    cursosMap[curso] = new Set();
+                }
+
+                cursosMap[curso].add(aluno);
+            });
+
+            const lista = Object.entries(cursosMap).map(([curso, alunosSet]) => ({
+                curso,
+                quantidadeAlunos: alunosSet.size,
+            }));
+            console.log(lista)
+            setResumoCursos(lista);
+        };
+
+        if (alunos && alunos.length > 0) {
+            processarDados();
+        }
+    }, [alunos]);
 
     return (
         <Box sx={{

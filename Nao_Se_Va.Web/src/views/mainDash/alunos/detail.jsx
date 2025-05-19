@@ -69,7 +69,7 @@ export const DetalheAluno = () => {
             else {
                 response = alunoSelecionado.estatistica;
             }
-            
+
             setResposta(response);
 
             if (Array.isArray(response?.DistribuicaoMotivo)) {
@@ -538,7 +538,7 @@ export const DetalheAluno = () => {
                                         }}
                                     >
                                         <GridViewIcon sx={{ transform: 'rotate(45deg)', fontSize: '1.8rem', color: '#2196f3' }} />
-                                        <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Chance de evasão</Typography>
+                                        <Typography variant='h4' sx={{ fontSize: '1.8rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>Probabilidade de evasão</Typography>
                                     </Box>
                                     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                                         <Box sx={{ width: '100%', mr: 1 }}>
@@ -581,6 +581,12 @@ export const DetalheAluno = () => {
                             borderRadius: '30px',
                             overflow: 'hidden',
                             position: 'relative',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s ease-in-out',
+                            ':hover': {
+                                transform: 'scale(1.01)',
+                                transition: 'transform 0.2s ease',
+                            }
                         }}
                     >
                         {
@@ -601,12 +607,6 @@ export const DetalheAluno = () => {
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            transition: 'transform 0.2s ease-in-out',
-                                            ':hover': {
-                                                transform: 'scale(1.01)',
-                                                transition: 'transform 0.2s ease',
-                                            }
                                         }}
                                     >
                                         <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#ffffff', width: '100%', height: '100%' }}>
