@@ -1,171 +1,105 @@
-import { DataGrid } from '@mui/x-data-grid';
 import { useInfos } from '../../../hooks/InfosProvider';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import {
+    Box,
+    IconButton,
+    Tooltip,
+    LinearProgress,
+    Button,
+    Paper,
+    useTheme,
+} from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+    createMRTColumnHelper,
+} from 'material-react-table';
+import Loading from '../../../components/Loading';
 
+const columnHelper = createMRTColumnHelper();
 
-export const ListAlunos = () => {
-    const { openSide, navigate, alunos, LinearProgress } = useInfos();
+export function ListAlunos() {
+    const { alunos, navigate, openSide } = useInfos();
+    const theme = useTheme();
 
-    const style = {
-        backgroundColor: "#f4f6f8",
-        color: "#333",
-        fontFamily: 'Poppins',
+    const handleDetail = (id) => {
+        navigate(`alunos/${id}/detalhe`);
+    };
 
-        fontSize: 14,
-        // Bordas
-        border: 'none',
-        boxShadow: "0px 0px 10px 0px rgba(37, 122, 233, 0.4)",
+    const handleExportRows = (rows) => {
+        const doc = new jsPDF();
+        const tableHeaders = ['ID do Aluno', 'Nome', 'Último Acesso'];
+        const tableData = rows.map((row) => [
+            row.original.user_id,
+            row.original.name,
+            row.original.user_lastaccess,
+        ]);
 
-        // Células
-        "& .MuiDataGrid-cell": {
-            color: "#333",
-            fontWeight: 500,
-            borderBottom: "1px solid #ddd",
-            backgroundColor: "#ffffff"
-        },
+        autoTable(doc, {
+            head: [tableHeaders],
+            body: tableData,
+        });
 
-        // Cabeçalho
-        '& .MuiDataGrid-columnHeaderTitle': {
-            fontWeight: 'bold',
-            color: '#000',
-            fontSize: '1rem',
-        },
-
-
-        // Hover nas linhas
-        "& .MuiDataGrid-row:hover": {
-            backgroundColor: "#cfe3fc"
-        },
-
-        // Seleção de linhas
-        "& .MuiDataGrid-row.Mui-selected": {
-            backgroundColor: "#90caf9 !important",
-        },
-
-        // Paginação
-        "& .MuiTablePagination-root": {
-            color: "#333",
-        },
-
-        // Barra de rolagem
-        "& .MuiDataGrid-virtualScroller": {
-            "&::-webkit-scrollbar": {
-                width: "6px",
-                height: "6px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#888",
-                borderRadius: "8px",
-            },
-        },
-
-        // Centralizar conteúdo das células
-        "& .MuiDataGrid-cellContent": {
-            justifyContent: "center",
-        },
-    }
-
-    const localeText = {
-        noRowsLabel: 'Nenhum registro encontrado',
-        noResultsOverlayLabel: 'Nenhum resultado encontrado',
-        errorOverlayDefaultLabel: 'Ocorreu um erro.',
-
-        toolbarDensity: 'Densidade',
-        toolbarDensityLabel: 'Densidade',
-        toolbarDensityCompact: 'Compacto',
-        toolbarDensityStandard: 'Padrão',
-        toolbarDensityComfortable: 'Confortável',
-
-        toolbarColumns: 'Colunas',
-        toolbarColumnsLabel: 'Selecionar colunas',
-
-        toolbarFilters: 'Filtros',
-        toolbarFiltersLabel: 'Mostrar filtros',
-        toolbarFiltersTooltipHide: 'Esconder filtros',
-        toolbarFiltersTooltipShow: 'Mostrar filtros',
-
-        toolbarExport: 'Exportar',
-        toolbarExportLabel: 'Exportar',
-        toolbarExportCSV: 'Baixar como CSV',
-
-        columnsPanelTextFieldLabel: 'Encontrar coluna',
-        columnsPanelTextFieldPlaceholder: 'Título da coluna',
-        columnsPanelDragIconLabel: 'Reordenar coluna',
-        columnsPanelShowAllButton: 'Mostrar todas',
-        columnsPanelHideAllButton: 'Ocultar todas',
-
-        footerRowSelected: (count) =>
-            count !== 1
-                ? `${count.toLocaleString()} linhas selecionadas`
-                : `${count.toLocaleString()} linha selecionada`,
-        footerTotalRows: 'Total de linhas:',
-
-        columnMenuSortAsc: 'Ordenar crescente',
-        columnMenuSortDesc: 'Ordenar decrescente',
-        columnMenuFilter: 'Filtrar',
-        columnMenuHideColumn: 'Esconder coluna',
-        columnMenuShowColumns: 'Mostrar colunas',
+        doc.save('alunos.pdf');
     };
 
     const columns = [
-        {
-            field: 'nome',
-            headerName: 'Nome',
-            flex: 4,
-            editable: true,
-        },
-        {
-            field: 'email',
-            headerName: 'Email',
-            flex: 4,
-            editable: true,
-        },
-        {
-            field: 'curso',
-            headerName: 'Curso',
-            flex: 3,
-            editable: true,
-        },
-        {
-            field: 'periodo',
-            headerName: 'Periodo',
-            flex: 2,
-            editable: true,
-            renderCell: (params) => `${params.row.periodo}º`
-        },
-        {
-            field: 'ultimoAcessoOuPorcentagem',
-            headerName: 'Probabilidade de Evasão',
-            flex: 4,
-            renderCell: (params) => {
-                const value = params.row?.estatistica?.PossibilidadeDeEvasao;
+        columnHelper.accessor('user_id', {
+            header: 'ID do Aluno',
+            muiTableBodyCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+            muiTableHeadCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+        }),
+        columnHelper.accessor('name', {
+            header: 'Nome',
+            muiTableBodyCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+            muiTableHeadCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+        }),
+        columnHelper.accessor('user_lastaccess', {
+            header: 'Último Acesso',
+            muiTableBodyCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+            muiTableHeadCellProps: {
+                sx: { width: '18%', flexGrow: 1 },
+            },
+        }),
+        columnHelper.display({
+            id: 'evasao',
+            header: 'Probabilidade de Evasão',
+            muiTableBodyCellProps: {
+                sx: { width: '30%', flexGrow: 1 },
+            },
+            muiTableHeadCellProps: {
+                sx: { width: '30%', flexGrow: 1 },
+            },
+            Cell: ({ row }) => {
+                const value = row.original.estatistica?.PossibilidadeDeEvasao;
+                const valueDate = row.original.user_lastaccess;
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
 
-                let percentual;
+                let percentual = 0;
 
-                if (!value) {
-
-                    const valueDate = params.row?.ultimoAcesso;
-
-                    if (!valueDate) return null;
-
+                if (!value && valueDate) {
                     const ultimoAcesso = new Date(valueDate);
-                    const hoje = new Date();
-
-                    hoje.setHours(0, 0, 0, 0);
                     ultimoAcesso.setHours(0, 0, 0, 0);
 
-                    const totalDiasReferencia = 60;
-
-                    const diffDias = Math.ceil(
-                        (hoje.getTime() - ultimoAcesso.getTime()) / (1000 * 60 * 60 * 24)
-                    );
-
+                    const totalDiasReferencia = 30;
+                    const diffDias = Math.ceil((hoje - ultimoAcesso) / (1000 * 60 * 60 * 24));
                     const diasSemAcesso = Math.max(0, Math.min(diffDias, totalDiasReferencia));
-
                     percentual = (diasSemAcesso / totalDiasReferencia) * 100;
-                }
-                else {
+                } else if (value) {
                     percentual = value;
                 }
 
@@ -175,75 +109,133 @@ export const ListAlunos = () => {
                 else cor = '#4caf50';
 
                 return (
-                    <Box
-                        sx={{
+                    <Tooltip title="Estes dados podem não estar atualizados, consulte na informação do aluno">
+                        <Box sx={{ width: '100%', px: 2 }}>
+                            <LinearProgress
+                                variant="determinate"
+                                value={percentual}
+                                sx={{
+                                    height: 10,
+                                    borderRadius: 5,
+                                    '& .MuiLinearProgress-bar': {
+                                        backgroundColor: cor,
+                                    },
+                                }}
+                            />
+                        </Box>
+                    </Tooltip>
+                );
+            },
+        }),
+        columnHelper.display({
+            id: 'actions',
+            header: 'Ações',
+            muiTableBodyCellProps: {
+                sx: { width: '5%', flexGrow: 1 },
+            },
+            muiTableHeadCellProps: {
+                sx: { width: '5%', flexGrow: 1 },
+            },
+            Cell: ({ row }) => (
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Tooltip title="Informação do Aluno">
+                        <IconButton
+                            sx={{ color: theme.palette.primary.main }}
+                            onClick={() => handleDetail(row.original.user_id)}
+                        >
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            ),
+        }),
+    ];
+
+    const table = useMaterialReactTable({
+        columns,
+        data: alunos || [],
+        enableRowSelection: true,
+        paginationDisplayMode: 'pages',
+        enablePagination: true,
+        enableColumnResizing: true,
+        columnFilterDisplayMode: 'popover',
+        positionToolbarAlertBanner: 'bottom',
+        renderTopToolbarCustomActions: ({ table }) => (
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexWrap: 'wrap',
+                    justifyContent: 'flex-start',
+                    p: 1,
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
+                    disabled={table.getPrePaginationRowModel().rows.length === 0}
+                    startIcon={<FileDownloadIcon />}
+                >
+                    Exportar Todos
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleExportRows(table.getRowModel().rows)}
+                    disabled={table.getRowModel().rows.length === 0}
+                    startIcon={<FileDownloadIcon />}
+                >
+                    Exportar Página
+                </Button>
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                    disabled={
+                        !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                    }
+                    startIcon={<FileDownloadIcon />}
+                >
+                    Exportar Selecionados
+                </Button>
+            </Box>
+        ),
+    });
+
+    return (
+        <Box
+            sx={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+            }}
+        >
+            <Paper
+                elevation={4}
+                sx={{
+                    width: openSide ? '85.5vw' : '98vw',
+                    height: '100%',
+                    overflow: 'auto',
+                }}
+            >
+                {!alunos ? (
+                    <Loading
+                        loading={!alunos}
+                        style={{
                             width: '100%',
                             height: '100%',
                             display: 'flex',
-                            justifyContent: 'center',
                             alignItems: 'center',
-                            px: 1,
+                            justifyContent: 'center',
                         }}
-                    >
-                        <Box sx={{ width: '80%' }}>
-                            <Tooltip title={"Estes dados podem não estar atualizados, consulte na informação do aluno"}>
-                                <LinearProgress
-                                    variant="determinate"
-                                    value={percentual}
-                                    sx={{
-                                        height: 10,
-                                        borderRadius: 5,
-                                        '& .MuiLinearProgress-bar': {
-                                            backgroundColor: cor,
-                                        },
-                                    }}
-                                />
-                            </Tooltip>
-                        </Box>
-                    </Box>
-                );
-            },
-        },
-        {
-            field: 'actions',
-            headerName: 'Ações',
-            flex: 1,
-            align: 'center',
-            headerAlign: 'center',
-            renderCell: (params) => (
-                <Tooltip title={"Informação do Aluno"}>
-                <IconButton sx={{ color: '#257ae9' }} onClick={() => { handleDetail(params.row?.id) }}>
-                    <InfoIcon />
-                </IconButton>
-                </Tooltip>
-            ),
-        },
-    ];
-
-    const handleDetail = async (id) => {
-        navigate(`alunos/${id}/detalhe`);
-    }
-
-
-    return (
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ height: 580, width: openSide ? "calc(93vw - 240px)" : "93vw" }}>
-                <DataGrid
-                    sx={style}
-                    rows={alunos}
-                    columns={columns}
-                    localeText={localeText}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 10,
-                            },
-                        },
-                    }}
-                    pageSizeOptions={[10, 15, 20]}
-                    disableRowSelectionOnClick
-                />
-            </div>
+                    />
+                ) : (
+                    <MaterialReactTable table={table} />
+                )}
+            </Paper>
         </Box>
     );
 }

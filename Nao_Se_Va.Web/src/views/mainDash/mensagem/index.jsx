@@ -61,11 +61,28 @@ export default function Mensagem() {
         setValue(newValue);
     };
 
+    const formatarTelefone = (valor) => {
+        let somenteNumeros = valor.replace(/\D/g, '').slice(0, 11);
+
+        if (somenteNumeros.length <= 2)
+            return `(${somenteNumeros}`;
+        if (somenteNumeros.length <= 6)
+            return `(${somenteNumeros.slice(0, 2)}) ${somenteNumeros.slice(2)}`;
+        if (somenteNumeros.length <= 10)
+            return `(${somenteNumeros.slice(0, 2)}) ${somenteNumeros.slice(2, 6)}-${somenteNumeros.slice(6)}`;
+        return `(${somenteNumeros.slice(0, 2)}) ${somenteNumeros.slice(2, 7)}-${somenteNumeros.slice(7)}`;
+    };
+
+    const handleChangeTelefone = (e) => {
+        const valorFormatado = formatarTelefone(e.target.value);
+        setAlunoSelecionadoMensagem(valorFormatado);
+    };
+
     const EnviarEmail = async () => {
         setLoadingSupremo(true)
         const tituloInvalido = !titulo.trim();
         const emailInvalido = !email.trim();
-        const alunoInvalido = !alunoSelecionado || !alunoSelecionado.email?.trim();
+        const alunoInvalido = !alunoSelecionado || !alunoSelecionado?.trim();
 
         setTituloErro(tituloInvalido);
         setEmailErro(emailInvalido);
@@ -75,7 +92,7 @@ export default function Mensagem() {
             toast.error('Campos obrigatórios não preenchidos!');
         } else {
             try {
-                await sendEmail(alunoSelecionado?.email, titulo, email);
+                await sendEmail(alunoSelecionado, titulo, email);
                 toast.success('E-mail enviado com sucesso!');
             }
             catch (err) {
@@ -88,7 +105,7 @@ export default function Mensagem() {
 
     const EnviarMensagem = async () => {
         const mensagemInvalido = !mensagem.trim();
-        const alunoInvalido = !alunoSelecionadoMensagem || !alunoSelecionadoMensagem.email?.trim();
+        const alunoInvalido = !alunoSelecionadoMensagem || !alunoSelecionadoMensagem?.trim() || alunoSelecionadoMensagem.length !== 15;
 
         setMensagemErro(mensagemInvalido);
         setAlunoMensagemErro(alunoInvalido);
@@ -96,7 +113,7 @@ export default function Mensagem() {
         if (mensagemInvalido || alunoInvalido) {
             toast.error('Campos obrigatórios não preenchidos!');
         } else {
-            const numeroFormatado = alunoSelecionadoMensagem?.telefone?.replace(/\D/g, '');
+            const numeroFormatado = alunoSelecionadoMensagem?.replace(/\D/g, '');
             const numeroComCodigo = `55${numeroFormatado.slice(-11)}`;
 
             const mensagemCodificada = encodeURIComponent(mensagem);
@@ -117,34 +134,19 @@ export default function Mensagem() {
             <CustomTabPanel value={value} index={0}>
                 <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
                     <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px' }}>
-                        <Autocomplete
-                            disablePortal
-                            options={alunos}
-                            getOptionLabel={(option) => option.nome}
-                            noOptionsText="Aluno não encontrado"
-                            onChange={(event, value) => {
-                                if (value) {
-                                    setAlunoSelecionado(value)
-                                }
-                                else {
-                                    setAlunoSelecionado(null)
-                                }
+                        <TextField
+                            id="outlined-required"
+                            label="E-mail"
+                            placeholder="Digite o e-mail"
+                            onChange={(event) => setAlunoSelecionado(event.target.value)}
+                            error={alunoErro}
+                            helperText={alunoErro ? 'E-mail é obrigatório' : ''}
+                            sx={{
+                                width: '40%',
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '100px',
+                                },
                             }}
-                            sx={{ width: '40%', borderRadius: '100px' }}
-                            renderInput={(params) =>
-                                <TextField
-                                    {...params}
-                                    label="Selecione o aluno"
-                                    error={alunoErro}
-                                    helperText={alunoErro ? 'Selecione um aluno' : ''}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        sx: {
-                                            borderRadius: '100px'
-                                        }
-                                    }}
-                                />
-                            }
                         />
                     </div>
                     <TextField
@@ -204,34 +206,20 @@ export default function Mensagem() {
             <CustomTabPanel value={value} index={1}>
                 <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
                     <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px' }}>
-                        <Autocomplete
-                            disablePortal
-                            options={alunos}
-                            getOptionLabel={(option) => option.nome}
-                            noOptionsText="Aluno não encontrado"
-                            onChange={(event, value) => {
-                                if (value) {
-                                    setAlunoSelecionadoMensagem(value)
-                                }
-                                else {
-                                    setAlunoSelecionadoMensagem(null)
-                                }
+                        <TextField
+                            id="outlined-required"
+                            label="Telefone"
+                            placeholder="Digite o telefone"
+                            onChange={handleChangeTelefone}
+                            error={alunoMensagemErro}
+                            value={alunoSelecionadoMensagem || ''}
+                            helperText={alunoMensagemErro ? 'Telefone é obrigatório' : ''}
+                            sx={{
+                                width: '40%',
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '100px',
+                                },
                             }}
-                            sx={{ width: '40%', borderRadius: '100px' }}
-                            renderInput={(params) =>
-                                <TextField
-                                    {...params}
-                                    label="Selecione o aluno"
-                                    error={alunoMensagemErro}
-                                    helperText={alunoMensagemErro ? 'Selecione um aluno' : ''}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        sx: {
-                                            borderRadius: '100px'
-                                        }
-                                    }}
-                                />
-                            }
                         />
                     </div>
                     <TextField

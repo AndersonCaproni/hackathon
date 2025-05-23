@@ -102,34 +102,14 @@ export const MainDash = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
-                                <Typography sx={{ cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px", width: '100%', textAlign: 'center', padding: 2 }}>
-                                    {coordenador?.nome}
+                                <Typography sx={{ fontSize: '1.2rem', cursor: 'default', borderBottom: "solid rgb(211, 211, 211) 1px", width: '100%', textAlign: 'center', padding: 2 }}>
+                                    {coordenador?.email.split('@')[0].charAt(0).toUpperCase() + coordenador.email.split('@')[0].slice(1)}
                                 </Typography>
                                 <Box sx={{
                                     display: "flex",
                                     alignItems: "center",
                                     flexDirection: "row",
                                     gap: 3,
-                                    width: "100%",
-                                    cursor: "pointer",
-                                    p: 2,
-                                    "&:hover": {
-                                        backgroundColor: "#f0f0f0",
-                                        borderRadius: "10px",
-                                        color: '#257ae9'
-                                    }
-                                }}
-                                    onClick={() => navigate('perfil')}>
-                                    <PermIdentityOutlined />
-                                    <Typography variant='h7'>
-                                        Perfil
-                                    </Typography>
-                                </Box>
-                                <Box sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    flexDirection: "row",
-                                    gap: 3,
                                     cursor: "pointer",
                                     p: 2,
                                     width: "100%",
@@ -139,7 +119,10 @@ export const MainDash = () => {
                                         color: '#257ae9'
                                     }
                                 }}
-                                    onClick={() => navigate("/")}
+                                    onClick={() => {
+                                        localStorage.removeItem('token')
+                                        window.location.href = '/';
+                                    }}
                                 >
                                     <LoginTwoTone />
                                     <Typography variant='h7'>

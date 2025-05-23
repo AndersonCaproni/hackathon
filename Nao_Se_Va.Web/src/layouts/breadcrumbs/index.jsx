@@ -30,8 +30,8 @@ const Breadcrumbs = ({
     const traverseMenu = (menu, path) => {
         for (let item of menu) {
             if (item.url) {
-                const regex = new RegExp("^" + item.url.replace(/:\w+/g, "[^/]+") + "$");
-                if (regex.test(path)) { 
+                const regex = new RegExp("^" + item.url.replace(/:\w+/g, "([a-zA-Z0-9_-]+)") + "$");
+                if (regex.test(path)) {
                     return [{ ...item, resolvedUrl: path }];
                 }
             }
@@ -47,7 +47,7 @@ const Breadcrumbs = ({
 
     useEffect(() => {
         const path = location.pathname;
-        const matchedBreadcrumbs = traverseMenu(navigation.items, path);
+        const matchedBreadcrumbs = traverseMenu(navigation.items, path) || [];
         setBreadcrumbs(matchedBreadcrumbs);
     }, [location, navigation]);
 
@@ -67,7 +67,7 @@ const Breadcrumbs = ({
                 color: "text.secondary",
                 fontWeight: "bold",
                 fontSize: breadcrumb?.tamanho,
-                "&:hover":{
+                "&:hover": {
                     color: "#257ae9",
                 }
 

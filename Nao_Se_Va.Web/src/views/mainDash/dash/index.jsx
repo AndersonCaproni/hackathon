@@ -25,10 +25,10 @@ const Dash = () => {
     useEffect(() => {
         setAlunoUltimoAcesso(
             alunos?.reduce((min, aluno) => {
-                return new Date(aluno.ultimoAcesso) < new Date(min.ultimoAcesso) ? aluno : min;
+                return new Date(aluno.user_lastaccess) < new Date(min.user_lastaccess) ? aluno : min;
             }, alunos?.[0])
         )
-    }, [])
+    }, [alunos])
 
     return (
         <Box
@@ -99,10 +99,42 @@ const Dash = () => {
                                     gap: 2
                                 }}>
                                     <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
+                                        ID:
+                                    </Typography>
+
+                                    <Tooltip title={alunoUltimoAcesso?.user_id}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{
+                                                maxWidth: '80%',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                cursor: 'default'
+                                            }}
+                                        >
+                                            {alunoUltimoAcesso?.user_id}
+                                        </Typography>
+                                    </Tooltip>
+                                </Box>
+                                <Box sx={{
+                                    borderTop: "solid 1px rgb(211, 211, 211)",
+                                    width: '100%',
+                                    paddingLeft: 4,
+                                    paddingTop: 2,
+                                    paddingBottom: 2,
+                                    display: "flex",
+                                    justifyContent: 'left',
+                                    alignItems: "baseline",
+                                    textAlign: 'center',
+                                    flexDirection: "row",
+                                    gap: 2
+                                }}>
+                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
                                         Nome:
                                     </Typography>
 
-                                    <Tooltip title={alunoUltimoAcesso?.nome}>
+                                    <Tooltip title={alunoUltimoAcesso?.name}>
                                         <Typography
                                             variant="h6"
                                             sx={{
@@ -113,7 +145,7 @@ const Dash = () => {
                                                 cursor: 'default'
                                             }}
                                         >
-                                            {alunoUltimoAcesso?.nome}
+                                            {alunoUltimoAcesso?.name}
                                         </Typography>
                                     </Tooltip>
                                 </Box>
@@ -131,10 +163,10 @@ const Dash = () => {
                                     gap: 2
                                 }}>
                                     <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        E-mail:
+                                        Último Acesso:
                                     </Typography>
 
-                                    <Tooltip title={alunoUltimoAcesso?.email}>
+                                    <Tooltip title={alunoUltimoAcesso?.user_lastaccess}>
                                         <Typography
                                             variant="h6"
                                             sx={{
@@ -145,103 +177,7 @@ const Dash = () => {
                                                 cursor: 'default'
                                             }}
                                         >
-                                            {alunoUltimoAcesso?.email}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Telefone:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.telefone}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.telefone}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Matrícula:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.matricula}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.matricula}
-                                        </Typography>
-                                    </Tooltip>
-                                </Box>
-                                <Box sx={{
-                                    borderTop: "solid 1px rgb(211, 211, 211)",
-                                    width: '100%',
-                                    paddingLeft: 4,
-                                    paddingTop: 2,
-                                    paddingBottom: 2,
-                                    display: "flex",
-                                    justifyContent: 'left',
-                                    alignItems: "baseline",
-                                    textAlign: 'center',
-                                    flexDirection: "row",
-                                    gap: 2
-                                }}>
-                                    <Typography variant="h5" sx={{ fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                                        Curso:
-                                    </Typography>
-
-                                    <Tooltip title={alunoUltimoAcesso?.curso}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                maxWidth: '80%',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                cursor: 'default'
-                                            }}
-                                        >
-                                            {alunoUltimoAcesso?.curso}
+                                            {alunoUltimoAcesso?.user_lastaccess}
                                         </Typography>
                                     </Tooltip>
                                 </Box>
@@ -252,14 +188,20 @@ const Dash = () => {
                 <Box
                     sx={{
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
                         width: "100%",
                         height: "auto",
                         border: "solid 1px rgb(211, 211, 211)",
                         borderRadius: "10px",
                         alignSelf: "flex-start",
                         overflow: "hidden",
-                    }}>
+                        cursor: 'pointer',
+                        position: 'relative'
+                    }}
+                    onClick={() => {
+                        navigate('ia')
+                    }}
+                >
                     <Box
                         sx={{
                             display: "flex",
@@ -267,64 +209,28 @@ const Dash = () => {
                             alignItems: "center",
                             backgroundColor: 'rgb(240, 242, 245)'
                         }}>
-                        <Typography variant="h4" sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Cursos Coordenados
+                        <Typography sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
+                            <AutoAwesome sx={{ fontSize: 80 }} />
                         </Typography>
                     </Box>
                     <Box
                         sx={{
                             width: '100%',
                             height: 'auto',
-                            padding: 6,
+                            paddingTop: 6,
+                            paddingBottom: 6,
                             display: 'flex',
-                            alignItems: 'left',
+                            alignItems: 'center',
                             justifyContent: 'center',
                             flexDirection: 'column',
                             gap: 6
                         }}>
-                        {
-                            coordenador?.cursosCoordenados?.map((item, index) =>
-                                <Tooltip
-                                    key={index}
-                                    title={
-                                        <Box sx={{ padding: 1 }}>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                                                Carga Horária:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.cargaHoraria} horas
-                                            </Typography>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 1 }}>
-                                                Curso:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.nome}
-                                            </Typography>
-                                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mt: 1 }}>
-                                                Modalidade:
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.modalidade}
-                                            </Typography>
-                                        </Box>
-                                    }
-                                    arrow
-                                    placement="top"
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontFamily: 'Poppins',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            flexDirection: 'row',
-                                            cursor: 'default'
-                                        }}
-                                        variant='h5'>
-                                        <ArrowRight /> {item.nome}
-                                    </Typography>
-                                </Tooltip>
-                            )
-                        }
+                        <Typography variant='h5' sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
+                            Clique aqui para acessar a nossa IA
+                        </Typography>
+                        <Efeito>
+
+                        </Efeito>
                     </Box>
                 </Box>
             </Box>
@@ -333,7 +239,7 @@ const Dash = () => {
                     display: "flex",
                     flexDirection: "column",
                     width: "40%",
-                    height: "auto",
+                    height: "100%",
                     alignSelf: "flex-start",
                     gap: 6
                 }}>
@@ -342,7 +248,7 @@ const Dash = () => {
                         display: "flex",
                         flexDirection: "column",
                         width: "100%",
-                        height: "auto",
+                        height: "100%",
                         border: "solid 1px rgb(211, 211, 211)",
                         borderRadius: "10px",
                         alignSelf: "flex-start",
@@ -545,54 +451,6 @@ const Dash = () => {
                                 </Box>
                             </Box>
                         </Box>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                        height: "auto",
-                        border: "solid 1px rgb(211, 211, 211)",
-                        borderRadius: "10px",
-                        alignSelf: "flex-start",
-                        overflow: "hidden",
-                        cursor: 'pointer',
-                        position: 'relative'
-                    }}
-                    onClick={() => {
-                        navigate('ia')
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: 'rgb(240, 242, 245)'
-                        }}>
-                        <Typography sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            <AutoAwesome sx={{ fontSize: 80 }} />
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: 'auto',
-                            paddingTop: 6,
-                            paddingBottom: 6,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            gap: 6
-                        }}>
-                        <Typography variant='h5' sx={{ m: 4, fontFamily: 'PoppinsSemiBold', color: '#257ae9' }}>
-                            Clique aqui para acessar a nossa IA
-                        </Typography>
-                        <Efeito>
-
-                        </Efeito>
                     </Box>
                 </Box>
             </Box>

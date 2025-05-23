@@ -6,7 +6,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
 
         const data = `Você é uma inteligência artificial especializada em análise de evasão escolar e deve responder como um gerador de JSON, sem nenhuma explicação adicional.
 
-        Você receberá a seguir um JSON com dados de um aluno.
+        Você receberá a seguir um JSON com logs de um aluno.
 
         Considere que a data atual é ${new Date().toLocaleDateString('pt-BR')} e leve isso em conta nas suas análises e cálculos.
         
@@ -28,7 +28,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
             ** adicione mais motivos aqui, se necessário **
             }
           ],
-          "Recomendacao": "ação recomendada como uma das seguintes opções: Encaminhar para orientação pedagógica, Monitoramento padrão ou Contato imediato com responsável"
+          "Recomendacao": "recomende uma ação a ser tomada pelo professor, se o aluno tiver uma probabilidade de evasão baixa, faça uma recomendação padrão"
         }
         
         ⚠️ Regras obrigatórias:
@@ -38,7 +38,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
         - Utilize aspas duplas em todas as chaves e valores conforme o padrão JSON.
         
         Dados do aluno:
-        ${JSON.stringify(aluno)}
+        ${JSON.stringify(aluno?.slice(0, 7))}
         `;
 
         const response = await axios.post(
@@ -54,16 +54,16 @@ export async function LlamaChat(aluno, tentativa = 1) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
         );
-        
+
         const respostaTexto = response.data.choices[0].message.content;
 
         if (!validarRespostaLlama(respostaTexto)) {
-            console.log("⚠️ Resposta inválida:", respostaTexto);
+            console.error("⚠️ Resposta inválida:", respostaTexto);
             if (tentativa < 3) {
                 console.warn(`⚠️ Resposta inválida - Tentativa ${tentativa}. Reenviando...`);
                 return await LlamaChat(aluno, tentativa + 1);
@@ -72,7 +72,20 @@ export async function LlamaChat(aluno, tentativa = 1) {
             }
         }
 
+        console.log('pesquisou')
+
         return JSON.parse(respostaTexto);
+        //         return JSON.parse(`{
+        // "PossibilidadeDeEvasao": 45,
+        // "MotivoPrincipal": "O aluno não apresenta nenhuma atividade relevante nos últimos 13 dias, sugerindo uma baixa motivação e possibilidade de evasão",
+        // "DistribuicaoMotivo": [
+        // {"motivo": "Falta de Engajamento", "porcentagem": 60},
+        // {"motivo": "Falta de Interesse", "porcentagem": 20},
+        // {"motivo": "Dificuldades com o Conteúdo", "porcentagem": 10},
+        // {"motivo": "Outros", "porcentagem": 10}
+        // ],
+        // "Recomendacao": "O professor deve entrar em contato com o aluno para discutir suas dificuldades e interesses, e propor atividades adicionais para aumentar o engajamento"
+        // }`);
 
     } catch (erro) {
         console.error('Erro ao consultar LiaMA:', erro);
@@ -82,7 +95,6 @@ export async function LlamaChat(aluno, tentativa = 1) {
 
 export async function ChatMensagem(pergunta) {
     try {
-
         const data = `${JSON.stringify(pergunta)} - RESPONDA SEMPRE MINHA ÚLTIMA PERGUNTA, PORÉM LEVE EM CONTA TODAS AS OUTRAS PERGUNTAS E RESPOSTA QUE EXISTEM NA LISTA ( IMPORTANET, EU QUERO APENAS A RESPOSTA COM SERIA NORMALMENTE, NÃO PRECISA CONTEXTUALIZAR)`
         const response = await axios.post(
             'https://openrouter.ai/api/v1/chat/completions',
@@ -97,13 +109,15 @@ export async function ChatMensagem(pergunta) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
         );
-        
+
         const respostaTexto = response.data.choices[0].message.content;
+
+        console.log('pesquisou')
 
         return respostaTexto;
 
@@ -133,13 +147,7 @@ function validarRespostaLlama(respostaTexto) {
 
         if (!motivosValidos) return false;
 
-        const opcoesRecomendadas = [
-            "Encaminhar para orientação pedagógica",
-            "Monitoramento padrão",
-            "Contato imediato com responsável",
-        ];
-
-        if (!opcoesRecomendadas.includes(json.Recomendacao)) return false;
+        if (typeof json.Recomendacao !== 'string') return false;
 
         return true;
 

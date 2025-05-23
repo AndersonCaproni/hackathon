@@ -35,7 +35,7 @@ export default function Chat() {
 
 
     useEffect(() => {
-        setMensagemDoChat(listaMensagem?.find(item => item.id === chatSelecionado)?.mensagens || [])
+        setMensagemDoChat(listaMensagem?.find(item => item?.user_id === chatSelecionado)?.mensagens || [])
     }, [chatSelecionado]);
 
     const Mensagem = async () => {
@@ -64,7 +64,7 @@ export default function Chat() {
 
                 setListaMensagem((mensagem) =>
                     mensagem.map((item) =>
-                        item.id === chatSelecionado ?
+                        item.user_id === chatSelecionado ?
                             { ...item, mensagens: novaListaResposta } :
                             item
                     ))
@@ -154,9 +154,9 @@ export default function Chat() {
                                 },
                                 gap: '0.5rem'
                             }}
-                            onClick={() => { setChatSelecionado(item?.id) }}
+                            onClick={() => { setChatSelecionado(item?.user_id) }}
                         >
-                            <Tooltip title={item?.nome}>
+                            <Tooltip title={item?.name}>
                                 <Typography
                                     variant='body2'
                                     sx={{
@@ -168,7 +168,7 @@ export default function Chat() {
                                         color: 'rgb(96, 96, 97)'
                                     }}
                                 >
-                                    {item?.nome}
+                                    {item?.name}
                                 </Typography>
                             </Tooltip>
                         </Box>

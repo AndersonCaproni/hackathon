@@ -3,6 +3,8 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+const https = require('https');
 
 const app = express();
 app.use(express.json());
@@ -55,6 +57,115 @@ app.post('/send-email', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Erro ao enviar o email.');
+  }
+});
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
+
+app.post('/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    const response = await axios.post(
+      'https://api.unifenas.br/v1/get-token',
+      {
+        email,
+        password: senha,
+      },
+      {
+        httpsAgent: agent,
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao autenticar:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({
+      erro: 'Erro ao autenticar na API externa',
+      detalhes: error.response?.data || error.message,
+    });
+  }
+});
+
+app.get('/alunos', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1]; // pega o token do header
+
+  if (!token) {
+    return res.status(401).json({ erro: 'Token não fornecido' });
+  }
+
+  try {
+    const response = await axios.get(
+      'https://api.unifenas.br/v1/moodle/usuarios',
+      {
+        httpsAgent: agent,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`, // aqui o token é passado
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao obter usuários:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({
+      message: 'Erro ao buscar os usuários.',
+      details: {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        request: {
+          method: error.config?.method,
+          url: error.config?.url,
+          headers: error.config?.headers
+        }
+      }
+    });
+  }
+});
+
+app.get('/aluno', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { user_id } = req.query; // agora vem da query
+
+  if (!token) {
+    return res.status(401).json({ erro: 'Token não fornecido' });
+  }
+
+  try {
+    const response = await axios.get(
+      'https://api.unifenas.br/v1/moodle/logs-usuario',
+      {
+        params: { user_id }, // passa o user_id como query string
+        httpsAgent: agent,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`, // aqui o token é passado
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao obter usuário:', error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({
+      message: 'Erro ao buscar os usuários.',
+      details: {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        request: {
+          method: error.config?.method,
+          url: error.config?.url,
+          headers: error.config?.headers
+        }
+      }
+    });
   }
 });
 
