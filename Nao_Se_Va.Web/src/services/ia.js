@@ -54,7 +54,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
@@ -109,7 +109,7 @@ export async function ChatMensagem(pergunta) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }

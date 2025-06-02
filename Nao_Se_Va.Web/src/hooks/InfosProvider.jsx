@@ -88,22 +88,93 @@ export const InfosProvider = ({ children }) => {
                         ])
                     }
                 },
+                {
+                    label: 'Como é analisada as informações dos alunos?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Como é analisada as informações dos alunos?'
+                            },
+                            {
+                                id: 4
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'A analise de evasão dos alunos é analisada com base em quantos dias?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'A analise de evasão dos alunos é analisada com base em quantos dias?'
+                            },
+                            {
+                                id: 5
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'Os motivos de chances de evasão que mostra nos dados dos alunos, são os mesmos pra todos?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Os motivos de chances de evasão que mostra nos dados dos alunos, são os mesmos pra todos?'
+                            },
+                            {
+                                id: 6
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
             ],
         },
         {
             id: 2,
             tipo: 'resposta',
-            descricao: `Vá até a listagem dos alunos: 
-            1 - Clique no botçao ação.
-            2 - Clique em tirar dúvidas com o professor.
-            Faça sua pergunta a IA.`
+            descricao: `Siga os passos a seguir:
+            1. Vá até a listagem dos alunos.
+            2. Clique no botão ação.
+            3. Clique em tirar dúvidas com o professor.
+            4. Faça sua pergunta a IA.`
         },
         {
             id: 3,
             tipo: 'resposta',
-            descricao: `Vá até a listagem dos alunos: 
-            1 - Clique no botçao ação.
-            Você verá as informações do aluno.`
+            descricao: `Siga os passos a seguir:
+            1. Vá até a listagem dos alunos. 
+            2. Clique no botão ação.
+            3. Você irá vizualizar todas as informações do aluno.`
+        },
+        {
+            id: 4,
+            tipo: 'resposta',
+            descricao: `As informações são analisadas pela IA, a analise é realizada em cada acesso realizado.`
+        },
+        {
+            id: 5,
+            tipo: 'resposta',
+            descricao: `As analises sao realizadas com base nos acessos realizados na plataforma da Universidade entre 10 a 15 dias, 15 a 25 dias e 25 dias.`
+        },
+        {
+            id: 6,
+            tipo: 'resposta',
+            descricao: `Não, os motivos variam de aluno pra aluno.`
         }
     ]);
     const [perguntaBot, setPerguntaBot] = useState('');
