@@ -41,7 +41,142 @@ export const InfosProvider = ({ children }) => {
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)
-    const [mensagemBot, setMensagemBot] = useState([{ tipo: 'pergunta', mensagem: `ddddddddddd ddddddddddddddd dddddddddd dddddddddddddd dddddd dddddd ddddddd ddddd ddddd dddddd dddddddd ddddddddddddd ddddd dddddd dddddd ddd dddd ddddd dddddddddd dd dddd dddddd dddd ddddd ddddddd ddddddd ddddd dddddd dddd ddddddddd dddddd ddddddd dddd dddd ddddd ddd dddddd dddddddd dddddd ddddddd dddddddddddddd ddddddd ddddddd ddddddd dddddddd dddddd dddd dddddddd ddddddd dddd ddddd dddddddddddd dddddddd dddd ddd dddddddd dd ddddddddddd dddddddd dd dddd ddd dddddd dddd dddddd ddddddddd dddddd ddddd dddddd ddddd dddddd ddddd ddd d ddddd ddddd d ddddddddddddd dd ddd ddd ddddd dd dddd ddd` }, { tipo: 'resposta', mensagem: `ddddddddddd ddddddddddddddd dddddddddd dddddddddddddd dddddd dddddd ddddddd ddddd ddddd dddddd dddddddd ddddddddddddd ddddd dddddd dddddd ddd dddd ddddd dddddddddd dd dddd dddddd dddd ddddd ddddddd ddddddd ddddd dddddd dddd ddddddddd dddddd ddddddd dddd dddd ddddd ddd dddddd dddddddd dddddd ddddddd dddddddddddddd ddddddd ddddddd ddddddd dddddddd dddddd dddd dddddddd ddddddd dddd ddddd dddddddddddd dddddddd dddd ddd dddddddd dd ddddddddddd dddddddd dd dddd ddd dddddd dddd dddddd ddddddddd dddddd ddddd dddddd ddddd dddddd ddddd ddd d ddddd ddddd d ddddddddddddd dd ddd ddd ddddd dd dddd ddd` }]);
+    const [mensagemMostrada, setMensagemMostrada] = useState([
+        {
+            id: 1
+        }
+    ])
+    const [mensagemBot, setMensagemBot] = useState([
+        {
+            id: 1,
+            tipo: 'opcoes',
+            titulo: 'Escolha uma das opções abaixo:',
+            funcionalidades: [
+                {
+                    label: 'Como abrir chat de um determinado aluno?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Como abrir chat de um determinado aluno?'
+                            },
+                            {
+                                id: 2
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'Como ver informações de um aluno?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Como ver informações de um aluno?'
+                            },
+                            {
+                                id: 3
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'Como é analisada as informações dos alunos?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Como é analisada as informações dos alunos?'
+                            },
+                            {
+                                id: 4
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'A analise de evasão dos alunos é analisada com base em quantos dias?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'A analise de evasão dos alunos é analisada com base em quantos dias?'
+                            },
+                            {
+                                id: 5
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+                {
+                    label: 'Os motivos de chances de evasão que mostra nos dados dos alunos, são os mesmos pra todos?',
+                    funcao: () => {
+                        setMensagemMostrada((mensagem) => [
+                            ...mensagem,
+                            {
+                                id: 'pergunta',
+                                label: 'Os motivos de chances de evasão que mostra nos dados dos alunos, são os mesmos pra todos?'
+                            },
+                            {
+                                id: 6
+                            },
+                            {
+                                id: 1
+                            }
+                        ])
+                    }
+                },
+            ],
+        },
+        {
+            id: 2,
+            tipo: 'resposta',
+            descricao: `Siga os passos a seguir:
+            1. Vá até a listagem dos alunos.
+            2. Clique no botão ação.
+            3. Clique em tirar dúvidas com o professor.
+            4. Faça sua pergunta a IA.`
+        },
+        {
+            id: 3,
+            tipo: 'resposta',
+            descricao: `Siga os passos a seguir:
+            1. Vá até a listagem dos alunos. 
+            2. Clique no botão ação.
+            3. Você irá vizualizar todas as informações do aluno.`
+        },
+        {
+            id: 4,
+            tipo: 'resposta',
+            descricao: `As informações são analisadas pela IA, a analise é realizada em cada acesso realizado.`
+        },
+        {
+            id: 5,
+            tipo: 'resposta',
+            descricao: `As analises sao realizadas com base nos acessos realizados na plataforma da Universidade entre 10 a 15 dias, 15 a 25 dias e 25 dias.`
+        },
+        {
+            id: 6,
+            tipo: 'resposta',
+            descricao: `Não, os motivos variam de aluno pra aluno.`
+        }
+    ]);
     const [perguntaBot, setPerguntaBot] = useState('');
     const navigation = {
         items: [
@@ -132,9 +267,9 @@ export const InfosProvider = ({ children }) => {
 
     useEffect(() => {
         scrollToBottomBot();
-    }, [mensagemBot, perguntaBot, ativoBot]);
+    }, [mensagemMostrada, ativoBot]);
 
-    useEffect(( ) => {console.log(ativoBot);scrollToBottomBot();},[ativoBot])
+    useEffect(() => { console.log(ativoBot); scrollToBottomBot(); }, [ativoBot])
 
     useEffect(() => {
         setLoadingSupremo(true);
@@ -255,6 +390,8 @@ export const InfosProvider = ({ children }) => {
             perguntaBot,
             setPerguntaBot,
             mensagemBot,
+            mensagemMostrada,
+        setMensagemMostrada
 
         }}>
             {children}
