@@ -1,0 +1,142 @@
+######################
+# .NET
+######################
+
+## Build results
+bin/
+obj/
+out/
+[Ll]og/
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.userprefs
+
+## Rider
+.idea/
+
+## VS Code
+.vscode/
+
+## Mac files
+.DS_Store
+
+## Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Publish
+publish/
+*.publish.xml
+
+## Logs
+*.log
+logs/
+
+## Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+## NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+nCrunchTemp_
+
+## Azure Pipelines
+csx/
+*.build.csdef
+
+## Entity Framework Migrations
+Migrations/
+
+## Dotnet generated
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Visual Studio
+.vs/
+.vscode/
+
+## NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+# NuGet v3
+**/.nuget/packages/
+.nuget/
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Sonarqube
+.sonarqube/
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## Backup & temp files
+*.bak
+*.swp
+*.tmp
+*.temp
+*.~*
+
+## IIS
+/.vs/
+/iisexpress/
+
+## Secrets
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+
+## Docker
+**/docker-compose.override.yml
+**/docker-compose.debug.yml
+
+## Coverage & Reports
+coverage/
+coverage.cobertura.xml
+coverage.opencover.xml
+TestResults/
+Coverage/
+
+## npm / NodeJS (Se houver Front-End no projeto)
+node_modules/
+dist/
+build/
+
+## Yarn / PNPM
+.yarn/
+.pnp.*
+.pnpm-debug.log
+
+## Logs de desenvolvimento
+*.log
+logs/
+
+######################
+# Fim do .gitignore
+######################
