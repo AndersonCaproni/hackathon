@@ -13,6 +13,7 @@ public class AlunoResposta
     public int? Periodo { get; set; }
 
     public DateOnly? DataIngresso { get; set; }
+    public string Matricula { get; set; } = null!;
 
     public int? TotalAcessos { get; set; }
 

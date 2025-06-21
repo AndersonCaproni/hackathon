@@ -12,6 +12,7 @@ public partial class Aluno
     public string? Cpf { get; set; }
 
     public string Email { get; set; } = null!;
+    public string Matricula { get; set; } = null!;
 
     public string Senha { get; set; } = null!;
 

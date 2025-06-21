@@ -11,7 +11,7 @@ import { sendEmail } from '../../../services/email'
 import toast from "react-hot-toast";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
-import {sendTextMessage}  from '../../../services/wpp'
+import { sendTextMessage } from '../../../services/wpp'
 import { Chat } from '@mui/icons-material';
 
 function CustomTabPanel(props) {
@@ -57,7 +57,8 @@ export default function Mensagem() {
     const [mensagemErro, setMensagemErro] = React.useState('')
     const {
         alunos,
-        setLoadingSupremo
+        setLoadingSupremo,
+        coordenador
     } = useInfos()
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -77,7 +78,7 @@ export default function Mensagem() {
             toast.error('Campos obrigatórios não preenchidos!');
         } else {
             try {
-                await sendEmail(alunoSelecionado?.email, titulo, email);
+                await sendEmail(alunoSelecionado?.email, titulo, email, coordenador?.email || "sem email");
                 toast.success('E-mail enviado com sucesso!');
             }
             catch (err) {
@@ -102,27 +103,37 @@ export default function Mensagem() {
             const numeroFormatado = alunoSelecionadoMensagem?.telefone?.replace(/\D/g, '');
             const numeroComCodigo = `55${numeroFormatado}`;
 
-            try{
-              await sendTextMessage(numeroComCodigo, mensagem)
-              toast.success('Mensagem enviada com sucesso!');
+            try {
+                await sendTextMessage(numeroComCodigo, mensagem)
+                toast.success('Mensagem enviada com sucesso!');
             }
-            catch(err){
-              toast.error('Erro ao enviar Mensagem, tente novamente mais tarde!');
+            catch (err) {
+                toast.error('Erro ao enviar Mensagem, tente novamente mais tarde!');
             }
         }
         setLoadingSupremo(false);
     };
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box
+            sx={{
+                mt: 3,
+                mb: 3,
+                mr: 3,
+                backgroundColor: '#fff',
+                width: '100%',
+                height: 'auto',
+                borderRadius: '30px',
+                overflowX: 'hidden',
+            }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab className={style.titulo} sx={{ fontFamily: 'Poppins' }} label="Email" {...a11yProps(0)} />
+                    <Tab className={style.titulo} sx={{ fontFamily: 'Poppins', pl: 5, pr: 5 }} label="Email" {...a11yProps(0)} />
                     <Tab className={style.titulo} sx={{ fontFamily: 'Poppins' }} label="WhatsApp" {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
+                <div style={{ height: "800px", width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
                     <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px' }}>
                         <Autocomplete
                             disablePortal
@@ -209,7 +220,7 @@ export default function Mensagem() {
                 </div>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
+                <div style={{ height: "800px", width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
                     <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '20px' }}>
                         <Autocomplete
                             disablePortal

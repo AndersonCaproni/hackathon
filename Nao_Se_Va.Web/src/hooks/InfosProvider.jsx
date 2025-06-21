@@ -20,7 +20,8 @@ import {
 import Breadcrumbs from '../layouts/breadcrumbs';
 import Loading from '../components/Loading';
 import { LlamaChat } from '../services/ia';
-import { obterAlunos } from '../services/unifenas';
+//import { obterAlunos } from '../services/unifenas';
+import { obterAlunosCompleto } from '../services/back';
 import toast from "react-hot-toast";
 
 const InfosContext = createContext();
@@ -37,7 +38,7 @@ export const InfosProvider = ({ children }) => {
     const buttonRef = useRef(null);
     const popperRef = useRef(null);
     const [pergunta, setPergunta] = useState("")
-    const [listaMensagem, setListaMensagem] = useState([{ user_id: 'IAPADRAOCHATUNICOESTE', name: 'Chat IA', mensagens: [] }])
+    const [listaMensagem, setListaMensagem] = useState([{ idAluno: 'IAPADRAOCHATUNICOESTE', name: 'Chat IA', mensagens: [] }])
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)
@@ -249,6 +250,7 @@ export const InfosProvider = ({ children }) => {
         ]
     };
     const [alunos, setAlunos] = useState();
+    const [alunosCompletos, setAlunosCompletos] = useState();
 
     const handleClick = (newPlacement) => (event) => {
         setAnchorEl(event.currentTarget);
@@ -269,24 +271,40 @@ export const InfosProvider = ({ children }) => {
         scrollToBottomBot();
     }, [mensagemMostrada, ativoBot]);
 
-    useEffect(() => { console.log(ativoBot); scrollToBottomBot(); }, [ativoBot])
+    useEffect(() => { scrollToBottomBot(); }, [ativoBot])
+
+    function formatarData(dataISO) {
+    if (!dataISO) return '';
+
+    const data = new Date(dataISO);
+    if (isNaN(data.getTime())) return '';
+
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+}
 
     useEffect(() => {
         setLoadingSupremo(true);
         const fetchData = async () => {
-            const local = JSON.parse(localStorage?.getItem("token"));
-            setCoordenador(local);
 
-            if (local?.access_token) {
-                try {
-                    const respost = await obterAlunos(local.access_token);
-                    setAlunos(respost);
-                }
-                catch (erro) {
-                    console.error(erro);
-                    toast.error('Erro ao obter os Alunos, recarregue e tente novamente!')
-                }
+            try {
+
+                const local = JSON.parse(localStorage?.getItem("token"));
+
+                console.log(local)
+
+                setCoordenador(local);
+                const respost = await obterAlunosCompleto(local?.idProfessor);
+                setAlunos(respost);
+
             }
+            catch (erro) {
+                console.error(erro);
+                toast.error('Erro ao obter os Alunos, recarregue e tente novamente!')
+            }
+
         };
 
         fetchData();
@@ -326,6 +344,7 @@ export const InfosProvider = ({ children }) => {
 
     return (
         <InfosContext.Provider value={{
+            formatarData,
             corpoRefBot,
             Tooltip,
             Collapse,
@@ -391,7 +410,7 @@ export const InfosProvider = ({ children }) => {
             setPerguntaBot,
             mensagemBot,
             mensagemMostrada,
-        setMensagemMostrada
+            setMensagemMostrada
 
         }}>
             {children}

@@ -7,6 +7,7 @@ public class AlunoResposta1
     public string? Cpf { get; set; }
 
     public string Email { get; set; } = null!;
+    public string Matricula { get; set; } = null!;
 
     public string? Telefone { get; set; }
 

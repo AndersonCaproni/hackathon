@@ -40,8 +40,8 @@ public class GeralController : ControllerBase
     }
 
     [HttpGet]
-    [Route("ObterAlunos/{id}")]
-    public async Task<ActionResult> Obteraluno([FromRoute] int id)
+    [Route("ObterAluno/{id}")]
+    public async Task<ActionResult> ObterAluno([FromRoute] int id)
     {
         try
         {

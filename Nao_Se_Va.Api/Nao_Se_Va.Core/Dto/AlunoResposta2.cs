@@ -10,6 +10,7 @@ public class AlunoResposta2
 
     public string? Telefone { get; set; }
     public string? Disciplina { get; set; }
+    public string Matricula { get; set; } = null!;
 
     public int? Periodo { get; set; }
 

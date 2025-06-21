@@ -43,7 +43,7 @@ const Dash = () => {
         setAcessosPorDia(
             dias1?.map((dia) => {
                 const count = alunos?.filter((aluno) =>
-                    dayjs(aluno?.user_lastaccess).isSame(dia, 'day')
+                    dayjs(aluno?.ultimoAcesso).isSame(dia, 'day')
                 ).length;
                 return count;
             }))
@@ -60,6 +60,19 @@ const Dash = () => {
         if (dias > 5) return '#ffcc00';
         return '#33ff00';
     };
+
+    const handleMarkClick = (event, params) => {
+    if (params) {
+      const diaSelecionado = labels[params.dataIndex];
+      const numeroDeAcessos = params.value;
+
+      console.log('Ponto clicado:', {
+        dia: diaSelecionado,
+        acessos: numeroDeAcessos,
+        seriesId: params.seriesId,
+      });
+    }
+  };
 
     return (
         <Box
@@ -89,9 +102,7 @@ const Dash = () => {
                 <Box>
                     <Typography variant='h1' sx={{ fontSize: '1.4rem', fontFamily: 'Poppins' }}>Seja bem-vindo de volta,</Typography>
                     <Typography variant='h1' sx={{ fontSize: '3rem', fontFamily: 'Poppins', fontWeight: 'bold' }}>
-                        {coordenador?.email &&
-                            coordenador.email.split('@')[0].charAt(0).toUpperCase() + coordenador.email.split('@')[0].slice(1)
-                        }
+                        {coordenador?.nome}
                     </Typography>
                 </Box>
                 <Box>
@@ -241,7 +252,7 @@ const Dash = () => {
                                                             justifyContent: 'center',
                                                         }}>
                                                         {(alunos?.filter(aluno => {
-                                                            const dias = dayjs().diff(dayjs(aluno.user_lastaccess), 'day');
+                                                            const dias = dayjs().diff(dayjs(aluno.ultimoAcesso), 'day');
                                                             return dias > 10;
                                                         }))?.length}
                                                     </Typography>
@@ -289,7 +300,7 @@ const Dash = () => {
                                                             justifyContent: 'center',
                                                         }}>
                                                         {(alunos?.filter(aluno => {
-                                                            const dias = dayjs().diff(dayjs(aluno.user_lastaccess), 'day');
+                                                            const dias = dayjs().diff(dayjs(aluno.ultimoAcesso), 'day');
                                                             return dias < 10;
                                                         }))?.length}
                                                     </Typography>
@@ -461,7 +472,7 @@ const Dash = () => {
                                             <Typography onClick={() => { navigate('./alunos') }} variant='h5' sx={{ cursor: 'pointer', fontWeight: 'bold', fontSize: '1.8', fontFamily: 'Poppins' }}>Alunos</Typography>
                                         </Box>
                                         {alunos?.map((aluno, index) => {
-                                            const color = getColorByLastAccess(aluno?.user_lastaccess);
+                                            const color = getColorByLastAccess(aluno?.ultimoAcesso);
 
                                             return (
                                                 <Box key={index} sx={{
@@ -479,7 +490,7 @@ const Dash = () => {
                                                             backgroundColor: color
                                                         }}
                                                     />
-                                                    <Typography onClick={() => { navigate(`./alunos/${aluno?.user_id}/detalhe`) }} sx={{ cursor: 'pointer', fontSize: '1.2rem', fontFamily: 'Poppins' }}>{aluno?.name}</Typography>
+                                                    <Typography onClick={() => { navigate(`./alunos/${aluno?.idAluno}/detalhe`) }} sx={{ cursor: 'pointer', fontSize: '1.2rem', fontFamily: 'Poppins' }}>{aluno?.nome}</Typography>
                                                 </Box>
                                             );
                                         })}
@@ -532,13 +543,14 @@ const Dash = () => {
                                         series={[
                                             {
                                                 data: acessosPorDia,
-                                                label: 'Acessos por dia',
+                                                label: 'Acessos no dia',
                                                 showMark: true,
                                             },
                                         ]}
                                         height={270}
                                         grid={{ vertical: true, horizontal: true }}
                                         tooltip={{ trigger: 'axis' }}
+                                        onMarkClick={handleMarkClick}
                                     />
                                 </>
                         }

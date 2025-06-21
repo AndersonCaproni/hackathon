@@ -26,7 +26,8 @@ export function SideBar({ children }) {
         openSide,
         toggleDrawer,
         navigate,
-        location
+        location,
+        hanbleOpenBot
     } = useInfos();
 
     return (
@@ -186,7 +187,7 @@ export function SideBar({ children }) {
                             Chat IA
                         </p>
                     </ButtonBase>
-                    {/* <ButtonBase
+                    <ButtonBase
                         onClick={() => navigate("mensagem")}
                         sx={{
                             width: '250px',
@@ -229,9 +230,9 @@ export function SideBar({ children }) {
                         }}>
                             Mensagem
                         </p>
-                    </ButtonBase> */}
+                    </ButtonBase>
                     <ButtonBase
-                        onClick={() => navigate("duvidas")}
+                        onClick={hanbleOpenBot}
                         sx={{
                             width: '250px',
                             height: '80px',
@@ -239,7 +240,7 @@ export function SideBar({ children }) {
                             display: 'block',
                             textAlign: 'left',
                             height: '80px',
-                            backgroundColor: location.pathname === '/dash/duvidas' ? "#257ae9" : 'transparent',
+                            backgroundColor: 'transparent',
                             transition: 'background-color 0.3s ease',
                             fontFamily: 'Poppins !important',
                             display: 'flex',
@@ -247,7 +248,7 @@ export function SideBar({ children }) {
                             justifyContent: 'center',
                             flexDirection: 'row',
                             '&:hover': {
-                                backgroundColor: location.pathname !== '/dash/duvidas' && '#e0e0e0',
+                                backgroundColor: '#e0e0e0',
                             }
                         }}
                     >
@@ -259,7 +260,7 @@ export function SideBar({ children }) {
                                 justifyContent: 'center',
                             }}
                         >
-                            <HelpOutlineRounded sx={{ color: location.pathname === '/dash/duvidas' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                            <HelpOutlineRounded sx={{ color: '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
                         </Box>
                         <p style={{
                             width: '70%',
@@ -269,12 +270,12 @@ export function SideBar({ children }) {
                             fontSize: '1.2rem',
                             fontWeight: 'bold',
                             fontFamily: 'Poppins !important',
-                            color: location.pathname === '/dash/duvidas' ? "#ffffff" : '#257ae9'
+                            color: '#257ae9'
                         }}>
                             Dúvidas
                         </p>
                     </ButtonBase>
-                    {/* <ButtonBase
+                    <ButtonBase
                         onClick={() => navigate("perfil")}
                         sx={{
                             width: '250px',
@@ -315,9 +316,9 @@ export function SideBar({ children }) {
                             fontFamily: 'Poppins !important',
                             color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9'
                         }}>
-                            Configurações
+                            Perfil
                         </p>
-                    </ButtonBase> */}
+                    </ButtonBase>
                     <ButtonBase
                         onClick={() => {
                             localStorage.removeItem('token')
@@ -330,7 +331,7 @@ export function SideBar({ children }) {
                             display: 'block',
                             textAlign: 'left',
                             height: '80px',
-                            backgroundColor: location.pathname === '/dash/perfil' ? "#257ae9" : 'transparent',
+                            backgroundColor: 'transparent',
                             transition: 'background-color 0.3s ease',
                             fontFamily: 'Poppins !important',
                             display: 'flex',
@@ -338,7 +339,7 @@ export function SideBar({ children }) {
                             justifyContent: 'center',
                             flexDirection: 'row',
                             '&:hover': {
-                                backgroundColor: location.pathname !== '/dash/perfil' && '#e0e0e0',
+                                backgroundColor: '#e0e0e0',
                             }
                         }}
                     >
@@ -350,7 +351,7 @@ export function SideBar({ children }) {
                                 justifyContent: 'center',
                             }}
                         >
-                            <LogoutIcon sx={{ transform: 'rotate(180deg)', color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                            <LogoutIcon sx={{ transform: 'rotate(180deg)', color: '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
                         </Box>
                         <p style={{
                             width: '70%',
@@ -360,7 +361,7 @@ export function SideBar({ children }) {
                             fontSize: '1.2rem',
                             fontWeight: 'bold',
                             fontFamily: 'Poppins !important',
-                            color: location.pathname === '/dash/perfil' ? "#ffffff" : '#257ae9'
+                            color: '#257ae9'
                         }}>
                             Sair
                         </p>

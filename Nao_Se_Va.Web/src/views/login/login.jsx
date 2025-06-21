@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/logoAzulIcon.png'
-import { login } from '../../services/unifenas';
+import { login } from '../../services/back';
 
 export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -49,7 +49,6 @@ export const Login = () => {
                     })}
                     onSubmit={async (values, { setSubmitting }) => {
                         try {
-                            // Simulação de login
                             const resposta = await login(values?.email, values?.password);
 
                             toast("Login realizado com sucesso", {

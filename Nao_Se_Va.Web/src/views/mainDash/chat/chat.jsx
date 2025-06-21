@@ -35,7 +35,7 @@ export default function Chat() {
 
 
     useEffect(() => {
-        setMensagemDoChat(listaMensagem?.find(item => item?.user_id === chatSelecionado)?.mensagens || [])
+        setMensagemDoChat(listaMensagem?.find(item => item?.idAluno === chatSelecionado)?.mensagens || [])
     }, [chatSelecionado]);
 
     const Mensagem = async () => {
@@ -64,7 +64,7 @@ export default function Chat() {
 
                 setListaMensagem((mensagem) =>
                     mensagem.map((item) =>
-                        item.user_id === chatSelecionado ?
+                        item.idAluno === chatSelecionado ?
                             { ...item, mensagens: novaListaResposta } :
                             item
                     ))
@@ -167,15 +167,15 @@ export default function Chat() {
                                     justifyContent: 'left',
                                     paddingLeft: '1rem',
                                     cursor: 'pointer',
-                                    backgroundColor: item?.user_id === chatSelecionado && 'rgb(231, 231, 231)',
+                                    backgroundColor: item?.idAluno === chatSelecionado && 'rgb(231, 231, 231)',
                                     '&:hover': {
                                         backgroundColor: 'rgb(231, 231, 231)'
                                     },
                                     gap: '0.5rem'
                                 }}
-                                onClick={() => { setChatSelecionado(item?.user_id) }}
+                                onClick={() => { setChatSelecionado(item?.idAluno) }}
                             >
-                                <Tooltip title={item?.name}>
+                                <Tooltip title={item?.nome}>
                                     <Typography
                                         variant='body2'
                                         sx={{
@@ -187,7 +187,7 @@ export default function Chat() {
                                             color: 'rgb(96, 96, 97)'
                                         }}
                                     >
-                                        {item?.name}
+                                        {item?.nome}
                                     </Typography>
                                 </Tooltip>
                             </Box>

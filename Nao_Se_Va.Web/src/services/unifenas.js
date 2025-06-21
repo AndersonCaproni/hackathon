@@ -39,14 +39,14 @@ export async function obterAlunos(token) {
     }
 }
 
-export async function obterAluno(user_id) {
+export async function obterAluno(idAluno) {
     try {
         const token = JSON.parse(localStorage?.getItem("token"))?.access_token;
         
         const resposta = await axios.get(
             'http://localhost:3001/aluno',
             {
-                params: { user_id }, // envia como query string
+                params: { idAluno }, // envia como query string
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }

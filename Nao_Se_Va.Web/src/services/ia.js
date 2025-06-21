@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 export async function LlamaChat(aluno, tentativa = 1) {
+    console.log(aluno)
     try {
 
         const data = `Você é uma inteligência artificial especializada em análise de evasão escolar e deve responder como um gerador de JSON, sem nenhuma explicação adicional.
 
-        Você receberá a seguir um JSON com logs de um aluno.
+        Você receberá a seguir um JSON com informações de um aluno.
 
         Considere que a data atual é ${new Date().toLocaleDateString('pt-BR')} e leve isso em conta nas suas análises e cálculos.
         
@@ -38,7 +39,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
         - Utilize aspas duplas em todas as chaves e valores conforme o padrão JSON.
         
         Dados do aluno:
-        ${JSON.stringify(aluno?.slice(0, 7))}
+        ${JSON.stringify(aluno)}
         `;
 
         const response = await axios.post(
@@ -54,7 +55,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
@@ -75,17 +76,6 @@ export async function LlamaChat(aluno, tentativa = 1) {
         console.log('pesquisou')
 
         return JSON.parse(respostaTexto);
-        //         return JSON.parse(`{
-        // "PossibilidadeDeEvasao": 45,
-        // "MotivoPrincipal": "O aluno não apresenta nenhuma atividade relevante nos últimos 13 dias, sugerindo uma baixa motivação e possibilidade de evasão",
-        // "DistribuicaoMotivo": [
-        // {"motivo": "Falta de Engajamento", "porcentagem": 60},
-        // {"motivo": "Falta de Interesse", "porcentagem": 20},
-        // {"motivo": "Dificuldades com o Conteúdo", "porcentagem": 10},
-        // {"motivo": "Outros", "porcentagem": 10}
-        // ],
-        // "Recomendacao": "O professor deve entrar em contato com o aluno para discutir suas dificuldades e interesses, e propor atividades adicionais para aumentar o engajamento"
-        // }`);
 
     } catch (erro) {
         console.error('Erro ao consultar LiaMA:', erro);
@@ -95,7 +85,7 @@ export async function LlamaChat(aluno, tentativa = 1) {
 
 export async function ChatMensagem(pergunta) {
     try {
-        const data = `${JSON.stringify(pergunta)} - RESPONDA SEMPRE MINHA ÚLTIMA PERGUNTA, PORÉM LEVE EM CONTA TODAS AS OUTRAS PERGUNTAS E RESPOSTA QUE EXISTEM NA LISTA ( IMPORTANET, EU QUERO APENAS A RESPOSTA COM SERIA NORMALMENTE, NÃO PRECISA CONTEXTUALIZAR)`
+        const data = `${JSON.stringify(pergunta)} - RESPONDA SEMPRE MINHA ÚLTIMA PERGUNTA, PORÉM LEVE EM CONTA TODAS AS OUTRAS PERGUNTAS E RESPOSTA QUE EXISTEM NA LISTA ( IMPORTANTE, EU QUERO APENAS A RESPOSTA COM SERIA NORMALMENTE, NÃO PRECISA CONTEXTUALIZAR)`
         const response = await axios.post(
             'https://openrouter.ai/api/v1/chat/completions',
             {
@@ -109,7 +99,7 @@ export async function ChatMensagem(pergunta) {
             },
             {
                 headers: {
-                    Authorization: 'Bearer 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',
+                    Authorization: 'Bearer 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',
                     'Content-Type': 'application/json',
                 },
             }
