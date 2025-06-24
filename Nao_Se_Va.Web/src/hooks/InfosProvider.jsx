@@ -306,8 +306,6 @@ export const InfosProvider = ({ children }) => {
 
                 const local = JSON.parse(localStorage?.getItem("token"));
 
-                console.log(local)
-
                 setCoordenador(local);
                 const respost = await obterAlunosCompleto(local?.idProfessor);
                 obterDisciplinas(local?.idProfessor)

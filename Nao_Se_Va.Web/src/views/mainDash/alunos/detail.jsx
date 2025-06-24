@@ -39,10 +39,8 @@ export const DetalheAluno = () => {
 
     useEffect(() => {
         const id = info?.id;
-        console.log(id)
         const obter = async () => {
             const aluno = await obterAluno(id);
-            console.log(aluno)
             setAluno(aluno);
             if (aluno) {
                 carregarDados(aluno);
@@ -56,12 +54,9 @@ export const DetalheAluno = () => {
 
         try {
             var response;
-            console.log(alunoSelecionado)
             const alunoComEstatistica = alunos?.find(aluno => aluno.idAluno === alunoSelecionado.idAluno);
-            console.log(alunoComEstatistica)
             if (!alunoComEstatistica?.estatistica) {
                 response = await LlamaChat(alunoSelecionado);
-                console.log(response)
                 setAlunos((alunos) =>
                     alunos.map((aluno) =>
                         aluno?.idAluno === alunoSelecionado?.idAluno

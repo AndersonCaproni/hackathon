@@ -52,7 +52,6 @@ export async function obterAluno(idAluno) {
                 }
             }
         );
-        console.log(resposta.data)
         return resposta.data;
     } catch (erro) {
         console.error("Erro ao obter aluno:", erro);

@@ -52,7 +52,6 @@ export const ListAlunos = () => {
                     ],
                 };
                 setFilterModel(novoFiltro);
-                console.log(novoFiltro)
             }
         }
     }, [dataFiltro]);

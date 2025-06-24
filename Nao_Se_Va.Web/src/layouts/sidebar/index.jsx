@@ -9,7 +9,7 @@ import {
     ListItemIcon,
     ListItemText,
     Typography,
-    IconButton
+    IconButton,
 } from '@mui/material';
 import { School, ArrowRight, ArrowLeft, House, SettingsRounded, AutoAwesome, HelpOutlineRounded, EmailRounded, MenuBook, Description } from '@mui/icons-material';
 import { useInfos } from '../../hooks/InfosProvider';
@@ -139,6 +139,50 @@ export function SideBar({ children }) {
                             color: location.pathname === '/dash/alunos' ? "#ffffff" : '#257ae9'
                         }}>
                             Alunos
+                        </p>
+                    </ButtonBase>
+                    <ButtonBase
+                        onClick={() => navigate("disciplinas")}
+                        sx={{
+                            width: '250px',
+                            height: '80px',
+                            borderRadius: '30px',
+                            display: 'block',
+                            textAlign: 'left',
+                            height: '80px',
+                            backgroundColor: location.pathname === '/dash/disciplinas' ? "#257ae9" : 'transparent',
+                            transition: 'background-color 0.3s ease',
+                            fontFamily: 'Poppins !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                            '&:hover': {
+                                backgroundColor: location.pathname !== '/dash/disciplinas' && '#e0e0e0',
+                            }
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '30%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <MenuBook sx={{ color: location.pathname === '/dash/disciplinas' ? "#ffffff" : '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
+                        </Box>
+                        <p style={{
+                            width: '70%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'left',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            fontFamily: 'Poppins !important',
+                            color: location.pathname === '/dash/disciplinas' ? "#ffffff" : '#257ae9'
+                        }}>
+                            Disciplinas
                         </p>
                     </ButtonBase>
                     <ButtonBase
@@ -273,50 +317,6 @@ export function SideBar({ children }) {
                             color: location.pathname === '/dash/mensagem' ? "#ffffff" : '#257ae9'
                         }}>
                             Mensagem
-                        </p>
-                    </ButtonBase>
-                    <ButtonBase
-                        onClick={hanbleOpenBot}
-                        sx={{
-                            width: '250px',
-                            height: '80px',
-                            borderRadius: '30px',
-                            display: 'block',
-                            textAlign: 'left',
-                            height: '80px',
-                            backgroundColor: 'transparent',
-                            transition: 'background-color 0.3s ease',
-                            fontFamily: 'Poppins !important',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                            '&:hover': {
-                                backgroundColor: '#e0e0e0',
-                            }
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                width: '30%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <HelpOutlineRounded sx={{ color: '#257ae9', m: 0, p: 0, fontSize: '2rem' }} />
-                        </Box>
-                        <p style={{
-                            width: '70%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'left',
-                            fontSize: '1.2rem',
-                            fontWeight: 'bold',
-                            fontFamily: 'Poppins !important',
-                            color: '#257ae9'
-                        }}>
-                            Dúvidas
                         </p>
                     </ButtonBase>
                     <ButtonBase

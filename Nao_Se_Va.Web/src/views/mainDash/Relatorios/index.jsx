@@ -150,7 +150,6 @@ const Relatorios = () => {
             const riscoMedia = Math.max(0, 1 - (aluno.media / 100));
             const ultimoAcesso = new Date(aluno.ultimoAcesso);
             const diasDesdeUltimoAcesso = Math.floor((hoje - ultimoAcesso) / (1000 * 60 * 60 * 24));
-            console.log(diasDesdeUltimoAcesso)
             const riscoAcesso = Math.min(1, diasDesdeUltimoAcesso / 90);
             const riscoEngajamento = Math.max(0, 1 - (aluno.totalAcessos / 200));
             const pesoMedia = 0.2;
@@ -166,7 +165,6 @@ const Relatorios = () => {
         alunosComRisco.sort((a, b) => a.indiceDeRisco - b.indiceDeRisco);
 
         const top10MelhoresAlunos = alunosComRisco.slice(0, 10);
-        console.log(top10MelhoresAlunos)
 
         setColumns([
             { field: 'nome', headerName: 'Nome', flex: 2 },

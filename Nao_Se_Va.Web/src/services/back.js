@@ -21,7 +21,6 @@ export async function login(email, senha) {
 export async function obterAlunosCompleto(id) {
     try {
         const resposta = await axios.get(`http://localhost:5046/api/Geral/ObterAlunosPorProfessorIdCompleto/${id}`);
-        console.log("Obter todos alunos completo: " , resposta)
 
         return resposta.data;
     } catch (erro) {
@@ -32,9 +31,7 @@ export async function obterAlunosCompleto(id) {
 
 export async function obterDisciplinaCompleta(id) {
     try {
-        console.log(id)
         const resposta = await axios.get(`http://localhost:5046/api/Geral/ObterAlunosEDisciplinaPorProfessor/${id}`);
-        console.log("Obter todas as disciplinas: " , resposta)
 
         return resposta.data;
     } catch (erro) {
@@ -46,7 +43,6 @@ export async function obterDisciplinaCompleta(id) {
 export async function obterAluno(id) {
     try {
         const resposta = await axios.get(`http://localhost:5046/api/Geral/ObterAluno/${id}`);
-        console.log("Obter um unico aluno: " , resposta )
         return resposta.data;
     } catch (erro) {
         console.error("Erro ao obter aluno:", erro);

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 export async function LlamaChat(aluno, tentativa = 1) {
-    console.log(aluno)
     try {
 
         const data = `Você é uma inteligência artificial especializada em análise de evasão escolar e deve responder como um gerador de JSON, sem nenhuma explicação adicional.
@@ -73,8 +72,6 @@ export async function LlamaChat(aluno, tentativa = 1) {
             }
         }
 
-        console.log('pesquisou')
-
         return JSON.parse(respostaTexto);
 
     } catch (erro) {
@@ -106,8 +103,6 @@ export async function ChatMensagem(pergunta) {
         );
 
         const respostaTexto = response.data.choices[0].message.content;
-
-        console.log('pesquisou')
 
         return respostaTexto;
 
