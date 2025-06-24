@@ -5,7 +5,7 @@ namespace Nao_Se_Va.Core.Infra;
 
 public partial class HackathonDbContext : DbContext
 {
-    private string _stringConexao = "Server=NOTE159\\SQLEXPRESS;Database=hackathon;Trusted_Connection=True;TrustServerCertificate=True;";
+    private string _stringConexao = "Server=Anderson\\SQLEXPRESS01;Database=hackathon;Trusted_Connection=True;TrustServerCertificate=True;";
     public HackathonDbContext()
     {
     }

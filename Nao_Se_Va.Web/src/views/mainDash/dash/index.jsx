@@ -32,7 +32,11 @@ const Dash = () => {
         AutoAwesome,
         navigate,
         setLoadingSupremo,
-        hanbleOpenBot
+        hanbleOpenBot,
+        filterModel,
+        setFilterModel,
+        dataFiltro,
+        setDataFiltro,
     } = useInfos()
 
 
@@ -64,13 +68,8 @@ const Dash = () => {
     const handleMarkClick = (event, params) => {
     if (params) {
       const diaSelecionado = labels[params.dataIndex];
-      const numeroDeAcessos = params.value;
-
-      console.log('Ponto clicado:', {
-        dia: diaSelecionado,
-        acessos: numeroDeAcessos,
-        seriesId: params.seriesId,
-      });
+      setDataFiltro(diaSelecionado)
+      navigate("alunos")
     }
   };
 

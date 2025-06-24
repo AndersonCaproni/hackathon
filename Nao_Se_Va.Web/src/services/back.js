@@ -30,6 +30,19 @@ export async function obterAlunosCompleto(id) {
     }
 }
 
+export async function obterDisciplinaCompleta(id) {
+    try {
+        console.log(id)
+        const resposta = await axios.get(`http://localhost:5046/api/Geral/ObterAlunosEDisciplinaPorProfessor/${id}`);
+        console.log("Obter todas as disciplinas: " , resposta)
+
+        return resposta.data;
+    } catch (erro) {
+        console.error("Erro ao obter disciplina:", erro);
+        throw erro;
+    }
+}
+
 export async function obterAluno(id) {
     try {
         const resposta = await axios.get(`http://localhost:5046/api/Geral/ObterAluno/${id}`);

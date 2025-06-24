@@ -21,7 +21,7 @@ import Breadcrumbs from '../layouts/breadcrumbs';
 import Loading from '../components/Loading';
 import { LlamaChat } from '../services/ia';
 //import { obterAlunos } from '../services/unifenas';
-import { obterAlunosCompleto } from '../services/back';
+import { obterAlunosCompleto, obterDisciplinaCompleta } from '../services/back';
 import toast from "react-hot-toast";
 
 const InfosContext = createContext();
@@ -42,6 +42,8 @@ export const InfosProvider = ({ children }) => {
     const [chatSelecionado, setChatSelecionado] = useState('IAPADRAOCHATUNICOESTE')
     const [loadingResposta, setLoadingResposta] = useState(false)
     const [loadingSupremo, setLoadingSupremo] = useState(false)
+    const [filterModel, setFilterModel] = useState({ items: [] });
+    const [dataFiltro, setDataFiltro] = useState(null);
     const [mensagemMostrada, setMensagemMostrada] = useState([
         {
             id: 1
@@ -251,6 +253,17 @@ export const InfosProvider = ({ children }) => {
     };
     const [alunos, setAlunos] = useState();
     const [alunosCompletos, setAlunosCompletos] = useState();
+    const [disciplinas, setDisciplinas] = useState([])
+
+
+    const obterDisciplinas = async (id) => {
+        try {
+            setDisciplinas(await obterDisciplinaCompleta(id))
+        }
+        catch (erro) {
+            toast.error("Erro ao carregar relatórios, recarregue a página ou tente mais tarde!")
+        }
+    }
 
     const handleClick = (newPlacement) => (event) => {
         setAnchorEl(event.currentTarget);
@@ -274,16 +287,16 @@ export const InfosProvider = ({ children }) => {
     useEffect(() => { scrollToBottomBot(); }, [ativoBot])
 
     function formatarData(dataISO) {
-    if (!dataISO) return '';
+        if (!dataISO) return '';
 
-    const data = new Date(dataISO);
-    if (isNaN(data.getTime())) return '';
+        const data = new Date(dataISO);
+        if (isNaN(data.getTime())) return '';
 
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const ano = data.getFullYear();
-    return `${dia}/${mes}/${ano}`;
-}
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
+        const ano = data.getFullYear();
+        return `${dia}/${mes}/${ano}`;
+    }
 
     useEffect(() => {
         setLoadingSupremo(true);
@@ -297,6 +310,7 @@ export const InfosProvider = ({ children }) => {
 
                 setCoordenador(local);
                 const respost = await obterAlunosCompleto(local?.idProfessor);
+                obterDisciplinas(local?.idProfessor)
                 setAlunos(respost);
 
             }
@@ -368,6 +382,8 @@ export const InfosProvider = ({ children }) => {
             coordenador,
             setCoordenador,
             listaMensagem,
+            disciplinas,
+            setDisciplinas,
             setListaMensagem,
             chatSelecionado,
             setChatSelecionado,
@@ -379,6 +395,10 @@ export const InfosProvider = ({ children }) => {
             Paper,
             Popper,
             Typography,
+            filterModel,
+            setFilterModel,
+            dataFiltro,
+            setDataFiltro,
             LoginTwoTone,
             Sync,
             PermIdentityOutlined,

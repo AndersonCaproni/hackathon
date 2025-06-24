@@ -1,4 +1,4 @@
-public class AlunoResposta
+public class AlunoResposta3
 {
     public int IdAluno { get; set; }
 
@@ -18,7 +18,7 @@ public class AlunoResposta
 
     public int? TotalAcessos { get; set; }
 
-    public decimal? Media { get; set; }
+    public decimal? Nota { get; set; }
 
     public DateTime? UltimoAcesso { get; set; }
 

@@ -12,6 +12,10 @@ public partial class AlunoDisciplina
 
     public DateOnly? DataMatricula { get; set; }
 
+    public decimal PontosAtuais { get; set; }
+
+    public decimal PontosEstimados { get; set; }
+
     public virtual Aluno IdAlunoNavigation { get; set; } = null!;
 
     public virtual Disciplina IdDisciplinaNavigation { get; set; } = null!;

@@ -30,13 +30,15 @@ public class GeralRepository
                 Periodo = aluno.Periodo,
                 DataIngresso = aluno.DataIngresso,
                 TotalAcessos = aluno.TotalAcessos,
-                Media = aluno.Media,
+                Media = aluno.AlunoDisciplinas.Average(x => x.PontosAtuais),
                 UltimoAcesso = aluno.UltimoAcesso,
                 Disciplinas = aluno.AlunoDisciplinas.Select(ad => new DisciplinaResposta
                 {
                     IdDisciplina = ad.IdDisciplinaNavigation.IdDisciplina,
                     Duracao = ad.IdDisciplinaNavigation.Duracao,
-                    Nome = ad.IdDisciplinaNavigation.Nome
+                    Nome = ad.IdDisciplinaNavigation.Nome,
+                    PontosAtuais = ad.PontosAtuais,
+                    PontosEstimados = ad.PontosEstimados
                 }).ToList()
             })
             .FirstOrDefaultAsync();
@@ -71,7 +73,7 @@ public class GeralRepository
                         Periodo = ad.IdAlunoNavigation.Periodo,
                         DataIngresso = ad.IdAlunoNavigation.DataIngresso,
                         TotalAcessos = ad.IdAlunoNavigation.TotalAcessos,
-                        Media = ad.IdAlunoNavigation.Media,
+                        Media = ad.IdAlunoNavigation.AlunoDisciplinas.Average(x => x.PontosAtuais),
                         UltimoAcesso = ad.IdAlunoNavigation.UltimoAcesso
                     }).ToList()
                 }).ToList()
@@ -96,13 +98,15 @@ public class GeralRepository
                 Matricula = aluno.Matricula,
                 DataIngresso = aluno.DataIngresso,
                 TotalAcessos = aluno.TotalAcessos,
-                Media = aluno.Media,
+                Media = aluno.AlunoDisciplinas.Average(x => x.PontosAtuais),
                 UltimoAcesso = aluno.UltimoAcesso,
                 Disciplinas = aluno.AlunoDisciplinas.Select(ad => new DisciplinaResposta
                 {
                     IdDisciplina = ad.IdDisciplinaNavigation.IdDisciplina,
                     Duracao = ad.IdDisciplinaNavigation.Duracao,
-                    Nome = ad.IdDisciplinaNavigation.Nome
+                    Nome = ad.IdDisciplinaNavigation.Nome,
+                    PontosAtuais = ad.PontosAtuais,
+                    PontosEstimados = ad.PontosEstimados
                 }).ToList()
             })
             .ToListAsync();
@@ -126,9 +130,11 @@ public class GeralRepository
                 DataIngresso = ad.IdAlunoNavigation.DataIngresso,
                 Matricula = ad.IdAlunoNavigation.Matricula,
                 TotalAcessos = ad.IdAlunoNavigation.TotalAcessos,
-                Media = ad.IdAlunoNavigation.Media,
+                Media = ad.IdAlunoNavigation.AlunoDisciplinas.Average(x => x.PontosAtuais),
                 UltimoAcesso = ad.IdAlunoNavigation.UltimoAcesso,
-                Disciplina = ad.IdDisciplinaNavigation.Nome
+                Disciplina = ad.IdDisciplinaNavigation.Nome,
+                PontosAtuais = ad.PontosAtuais,
+                PontosEstimados = ad.PontosEstimados
             })
             .ToListAsync();
     }
@@ -154,11 +160,41 @@ public class GeralRepository
                         Periodo = ad.IdAlunoNavigation.Periodo,
                         DataIngresso = ad.IdAlunoNavigation.DataIngresso,
                         TotalAcessos = ad.IdAlunoNavigation.TotalAcessos,
-                        Media = ad.IdAlunoNavigation.Media,
+                        Media = ad.IdAlunoNavigation.AlunoDisciplinas.Average(x => x.PontosAtuais),
                         UltimoAcesso = ad.IdAlunoNavigation.UltimoAcesso
                     }).ToList()
             })
             .FirstOrDefaultAsync();
+
+        return disciplinaComAlunosDto;
+    }
+
+    public async Task<List<DisciplinaResposta2>> ObterAlunosEDisciplinaPorProfessor(int id)
+    {
+        var disciplinaComAlunosDto = await _context.Disciplinas
+            .Where(d => d.IdProfessor == id)
+            .Select(disciplina => new DisciplinaResposta2
+            {
+                IdDisciplina = disciplina.IdDisciplina,
+                Nome = disciplina.Nome,
+                Duracao = disciplina.Duracao,
+                Alunos = disciplina.AlunoDisciplinas
+                    .Select(ad => new AlunoResposta3
+                    {
+                        IdAluno = ad.IdAlunoNavigation.IdAluno,
+                        Nome = ad.IdAlunoNavigation.Nome,
+                        Cpf = ad.IdAlunoNavigation.Cpf,
+                        Email = ad.IdAlunoNavigation.Email,
+                        Telefone = ad.IdAlunoNavigation.Telefone,
+                        Matricula = ad.IdAlunoNavigation.Matricula,
+                        Periodo = ad.IdAlunoNavigation.Periodo,
+                        DataIngresso = ad.IdAlunoNavigation.DataIngresso,
+                        TotalAcessos = ad.IdAlunoNavigation.TotalAcessos,
+                        Nota = ad.PontosAtuais,
+                        UltimoAcesso = ad.IdAlunoNavigation.UltimoAcesso
+                    }).ToList()
+            })
+            .ToListAsync();
 
         return disciplinaComAlunosDto;
     }

@@ -5,4 +5,8 @@ public partial class DisciplinaResposta
     public string Nome { get; set; } = null!;
 
     public int Duracao { get; set; }
+
+    public decimal PontosAtuais { get; set; }
+
+    public decimal PontosEstimados { get; set; }
 }

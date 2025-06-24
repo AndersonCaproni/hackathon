@@ -1,16 +1,28 @@
 import { DataGrid } from '@mui/x-data-grid';
+import { ptBR } from '@mui/x-data-grid/locales'
 import { useInfos } from '../../../hooks/InfosProvider';
-import { Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Popover, TextField, Tooltip } from '@mui/material';
+import { Box, Button, FormControlLabel, IconButton, Menu, MenuItem, Popover, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { IconFilter, IconMessageChatbotFilled } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Delete } from '@mui/icons-material';
+import toast from 'react-hot-toast';
 
 export const ListAlunos = () => {
-    const { openSide, navigate, alunos, LinearProgress, hanbleOpenBot, formatarData } = useInfos();
+    const {
+        openSide,
+        navigate,
+        alunos,
+        LinearProgress,
+        hanbleOpenBot,
+        formatarData,
+        filterModel,
+        setFilterModel,
+        dataFiltro,
+        setDataFiltro, } = useInfos();
     const [anchorEl, setAnchorEl] = useState(null);
     const [filtroNome, setFiltroNome] = useState('');
     const [apenasAtivos, setApenasAtivos] = useState(false);
-
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -21,6 +33,29 @@ export const ListAlunos = () => {
     const aplicarFiltro = () => {
         handleClose();
     };
+
+    useEffect(() => {
+        if (dataFiltro && dataFiltro.includes('/')) {
+            const partes = dataFiltro.split('/');
+            if (partes.length === 2) {
+                const dia = partes[0];
+                const mes = partes[1];
+                const anoAtual = new Date().getFullYear();
+                const stringDeBusca = `${anoAtual}-${mes}-${dia}`;
+                const novoFiltro = {
+                    items: [
+                        {
+                            field: 'ultimoAcesso',
+                            operator: 'contains',
+                            value: stringDeBusca,
+                        },
+                    ],
+                };
+                setFilterModel(novoFiltro);
+                console.log(novoFiltro)
+            }
+        }
+    }, [dataFiltro]);
 
     const style = {
         backgroundColor: "#ffffff",
@@ -140,13 +175,13 @@ export const ListAlunos = () => {
         },
         {
             field: 'email',
-            headerName: 'Email',
+            headerName: 'E-mail',
             flex: 4,
             editable: true,
         },
         {
             field: 'matricula',
-            headerName: 'Matricula',
+            headerName: 'Matrícula',
             flex: 2,
             editable: true,
         },
@@ -247,6 +282,63 @@ export const ListAlunos = () => {
         navigate(`alunos/${id}/detalhe`);
     }
 
+    const [localFilters, setLocalFilters] = useState({});
+
+    useEffect(() => {
+        const initialFilters = {};
+        filterModel?.items.forEach(item => {
+            initialFilters[item.field] = item.value;
+        });
+        setLocalFilters(initialFilters);
+    }, [filterModel]);
+
+    const handleClear = () => {
+        setLocalFilters({});
+        setFilterModel({ items: [] });
+        setDataFiltro(null)
+        handleClose();
+    }
+
+    const handleApply = () => {
+        const newFilterItems = Object.entries(localFilters)
+            .filter(([, value]) => value)
+            .map(([field, value]) => ({
+                field,
+                operator: 'contains',
+                value,
+            }));
+
+        if (newFilterItems.length > 1) {
+            toast.error("Apenas um filtro por vez é permitido.");
+
+        }
+
+        setFilterModel({ items: newFilterItems });
+        handleClose();
+    };
+
+    const handleInputChange = (field, value) => {
+        setLocalFilters(prevState => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+    const columnLookup = useMemo(() =>
+        columns.reduce((acc, col) => {
+            acc[col.field] = col.headerName;
+            return acc;
+        }, {}),
+        [columns]
+    );
+
+    const handleDeleteFilter = (fieldToDelete) => {
+        setFilterModel(currentModel => ({
+            ...currentModel,
+            items: currentModel.items.filter(item => item.field !== fieldToDelete),
+        }));
+        setDataFiltro(null)
+    };
 
     return (
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', pr: 3, flexDirection: 'column', gap: 3, mt: 3 }}>
@@ -259,12 +351,50 @@ export const ListAlunos = () => {
                     flexDirection: 'row'
                 }}
             >
-                <Box
-                    sx={{
-                        width: '90%'
-                    }}
-                >
-                    
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start', gap: 3, flexDirection: 'row', width: '90%' }}>
+                    {filterModel.items.map(item => (
+                        <Box key={item.field} sx={{ width: '23%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                            <TextField
+                                label={columnLookup[item.field] || item.field}
+                                variant="outlined"
+                                value={item.value}
+                                disabled
+                                size="small"
+                                sx={{
+                                    backgroundColor: "#fff",
+                                    borderRadius: '30px',
+                                    width: '100%',
+                                    '& .MuiOutlinedInput-root': {
+                                        borderRadius: '30px',
+                                    },
+                                    '& .Mui-disabled': {
+                                        '& .MuiInputBase-input.Mui-disabled': {
+                                            color: 'black',
+                                            WebkitTextFillColor: 'black',
+                                        },
+                                        '& .MuiInputLabel-root.Mui-disabled': {
+                                            color: 'blue',
+                                        },
+                                        '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+                                            borderColor: 'blue',
+                                        },
+                                    },
+                                }}
+                            />
+                            <IconButton
+                                aria-label={`Excluir filtro de ${columnLookup[item.field] || item.field}`}
+                                sx={{
+                                    backgroundColor: '#257ae9', color: '#fff', '&:hover ': {
+                                        backgroundColor: 'rgb(101, 159, 235)'
+                                    }
+                                }}
+                                // 4. A função de exclusão agora funciona perfeitamente
+                                onClick={() => handleDeleteFilter(item.field)}
+                            >
+                                <Delete />
+                            </IconButton>
+                        </Box>
+                    ))}
                 </Box>
                 <Box
                     sx={{
@@ -277,7 +407,6 @@ export const ListAlunos = () => {
                     }}
                 >
                     <div style={{ position: 'relative', display: 'inline-block' }}>
-
                         <IconButton
                             onClick={handleClick}
                             sx={{
@@ -306,43 +435,35 @@ export const ListAlunos = () => {
                                     zIndex: 5,
                                     overflow: 'visible',
                                     borderRadius: 2,
-                                    p: 3
+                                    p: 5
                                 },
                             }}
                         >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 12,
-                                }}
-                            >
-                                <TextField
-                                    fullWidth
-                                    label="ID"
-                                    variant="outlined"
-                                    margin="dense"
-                                    InputProps={{
-                                        sx: {
-                                            borderRadius: '999px',
-                                        },
-                                    }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="Nome"
-                                    variant="outlined"
-                                    margin="dense"
-                                    InputProps={{
-                                        sx: {
-                                            borderRadius: '999px',
-                                        },
-                                    }}
-                                />
-                                <Button variant="contained" fullWidth onClick={aplicarFiltro}>
-                                    Aplicar Filtro
-                                </Button>
-                            </div>
+                            <Box sx={{}}>
+                                <Typography variant="h6" component="h2" sx={{ fontFamily: "Poppins", width: '100%', textAlign: 'center', color: '#257ae9', fontWeight: 'Bold' }}>Filtros da Tabela</Typography>
+                                <Stack spacing={2} mt={2}>
+                                    {columns
+                                        .filter(col =>
+                                            col.field !== 'idAluno' &&
+                                            col.field !== 'actions' &&
+                                            col.field !== 'evasao'
+                                        )
+                                        .map(col => (
+                                            <TextField
+                                                key={col.field}
+                                                label={col.headerName}
+                                                variant="outlined"
+                                                value={localFilters[col.field] || ''}
+                                                onChange={(e) => handleInputChange(col.field, e.target.value)}
+                                            />
+                                        ))
+                                    }
+                                </Stack>
+                                <Stack direction="row" spacing={2} mt={3} justifyContent="flex-end">
+                                    <Button onClick={handleClear} color="secondary">Limpar Filtros</Button>
+                                    <Button onClick={handleApply} variant="contained">Aplicar</Button>
+                                </Stack>
+                            </Box>
                         </Popover>
                     </div>
                     <IconButton
@@ -358,12 +479,12 @@ export const ListAlunos = () => {
                     </IconButton>
                 </Box>
             </Box>
-            <div style={{ borderRadius: "30px" , height: 820, width: "77vw" , boxShadow: "5px 5px 10px 0px rgba(37, 122, 233, 0.4)",}}>
+            <div style={{ borderRadius: "30px", height: 820, width: "77vw", boxShadow: "5px 5px 10px 0px rgba(37, 122, 233, 0.4)", }}>
                 <DataGrid
                     sx={style}
                     rows={alunos}
                     columns={columns}
-                    localeText={localeText}
+                    localeText={ptBR}
                     getRowId={(row) => row.idAluno}
                     initialState={{
                         pagination: {
@@ -374,9 +495,12 @@ export const ListAlunos = () => {
                     }}
                     pageSizeOptions={[15, 25, 30]}
                     disableRowSelectionOnClick
+                    disableColumnFilter
+                    filterModel={filterModel}
+                    onFilterModelChange={(newModel) => setFilterModel(newModel)}
                 />
             </div>
-        </Box>
+        </Box >
     );
 }
 

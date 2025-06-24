@@ -12,6 +12,7 @@ import Mensagem from "../views/mainDash/mensagem";
 import Perfil from "../views/mainDash/perfil";
 import Dash from "../views/mainDash/dash";
 import PrivateRoute from './private'
+import Relatorios from "../views/mainDash/Relatorios";
 
 export const route = createBrowserRouter([
     {
@@ -55,6 +56,10 @@ export const route = createBrowserRouter([
                     {
                         path: "/dash/duvidas",
                         element: <Duvidas />
+                    },
+                    {
+                        path: "/dash/relatorios",
+                        element: <Relatorios />
                     },
                     {
                         path: "/dash/mensagem",

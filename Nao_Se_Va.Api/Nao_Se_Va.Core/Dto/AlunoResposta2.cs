@@ -22,4 +22,8 @@ public class AlunoResposta2
 
     public DateTime? UltimoAcesso { get; set; }
 
+    public decimal PontosAtuais { get; set; }
+
+    public decimal PontosEstimados { get; set; }
+
 }

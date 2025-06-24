@@ -38,6 +38,21 @@ public class GeralController : ControllerBase
             return NotFound(ex.Message);
         }
     }
+    
+
+    [HttpGet]
+    [Route("ObterAlunosEDisciplinaPorProfessor/{id}")]
+    public async Task<ActionResult> ObterAlunosEDisciplinaPorProfessor([FromRoute] int id)
+    {
+        try
+        {
+            return Ok(await _repository.ObterAlunosEDisciplinaPorProfessor(id));
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 
     [HttpGet]
     [Route("ObterAluno/{id}")]
